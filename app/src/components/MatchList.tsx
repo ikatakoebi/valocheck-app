@@ -116,7 +116,7 @@ function getDateLabel(isoString: string): string {
 interface ProcessedMatch {
   match: MatchInfo;
   player: MatchPlayerInfo;
-  isWin: boolean;
+  result: 'win' | 'loss' | 'draw';
   teamRoundsWon: number;
   opponentRoundsWon: number;
   totalRounds: number;
@@ -134,6 +134,7 @@ interface DayGroup {
   summary: {
     wins: number;
     losses: number;
+    draws: number;
     totalKills: number;
     totalDeaths: number;
     hsPercent: number;
@@ -160,10 +161,10 @@ function processMatches(
     if (!player) continue;
 
     const playerTeam = match.teams?.find((t) => t.team_id === player.team_id);
-    const isWin = playerTeam?.won ?? false;
     const teamRoundsWon = playerTeam?.rounds?.won ?? 0;
     const opponentTeam = match.teams?.find((t) => t.team_id !== player.team_id);
     const opponentRoundsWon = opponentTeam?.rounds?.won ?? 0;
+    const result: 'win' | 'loss' | 'draw' = playerTeam?.won ? 'win' : teamRoundsWon === opponentRoundsWon ? 'draw' : 'loss';
     const totalRounds = teamRoundsWon + opponentRoundsWon;
 
     const acs = totalRounds > 0 ? (player.stats?.score || 0) / totalRounds : 0;
@@ -190,7 +191,7 @@ function processMatches(
     processed.push({
       match,
       player,
-      isWin,
+      result,
       teamRoundsWon,
       opponentRoundsWon,
       totalRounds,
@@ -220,6 +221,7 @@ function groupByDay(processedMatches: ProcessedMatch[]): DayGroup[] {
     // Calculate summary
     let wins = 0;
     let losses = 0;
+    let draws = 0;
     let totalKills = 0;
     let totalDeaths = 0;
     let totalHeadshots = 0;
@@ -227,7 +229,8 @@ function groupByDay(processedMatches: ProcessedMatch[]): DayGroup[] {
     let totalAcs = 0;
 
     for (const pm of dayMatches) {
-      if (pm.isWin) wins++;
+      if (pm.result === 'win') wins++;
+      else if (pm.result === 'draw') draws++;
       else losses++;
       totalKills += pm.player.stats?.kills || 0;
       totalDeaths += pm.player.stats?.deaths || 0;
@@ -246,6 +249,7 @@ function groupByDay(processedMatches: ProcessedMatch[]): DayGroup[] {
       summary: {
         wins,
         losses,
+        draws,
         totalKills,
         totalDeaths,
         hsPercent,
@@ -305,7 +309,7 @@ export default function MatchList({
                   <span className="text-[#0F172A] text-sm font-semibold">{group.dateLabel}</span>
                   <div className="flex items-center gap-3 text-xs font-mono">
                     <span className={`font-medium ${group.summary.wins >= group.summary.losses ? 'text-[#10B981]' : 'text-[#E11D48]'}`}>
-                      {group.summary.wins}W-{group.summary.losses}L
+                      {group.summary.wins}W-{group.summary.losses}L{group.summary.draws > 0 ? `-${group.summary.draws}D` : ''}
                     </span>
                     <span className={`${kd >= 1 ? 'text-[#10B981]' : 'text-[#E11D48]'}`}>
                       K/D {kd.toFixed(2)}
@@ -322,7 +326,7 @@ export default function MatchList({
                 {/* Matches in this day */}
                 <div className="flex flex-col gap-1.5">
                   {group.matches.map((pm) => {
-                    const { match, player, isWin, teamRoundsWon, opponentRoundsWon } = pm;
+                    const { match, player, result, teamRoundsWon, opponentRoundsWon } = pm;
                     const agentName = player.agent?.name ?? '不明';
                     const agentIconUrl = getAgentIconUrl(player.agent?.id);
                     const mapName = match.metadata.map?.name ?? '不明';
@@ -336,26 +340,30 @@ export default function MatchList({
                         key={match.metadata.match_id}
                         onClick={() => onMatchClick?.(match.metadata.match_id)}
                         className={`flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-3 rounded-lg border transition-all hover:shadow-sm cursor-pointer text-left w-full ${
-                          isWin
+                          result === 'win'
                             ? 'border-[#DCFCE7] bg-[#F0FDF4]/30'
+                            : result === 'draw'
+                            ? 'border-[#D97706]/30 bg-[#FFFBEB]/30'
                             : 'border-[#E2E8F0] bg-white'
                         }`}
                       >
                         {/* Accent bar */}
                         <div className={`w-1.5 h-10 rounded-full shrink-0 ${
-                          isWin ? 'bg-[#10B981]' : 'bg-[#E11D48] opacity-60'
+                          result === 'win' ? 'bg-[#10B981]' : result === 'draw' ? 'bg-[#D97706] opacity-60' : 'bg-[#E11D48] opacity-60'
                         }`} />
 
-                        {/* Win/Loss badge + Rank indicator */}
+                        {/* Win/Loss/Draw badge + Rank indicator */}
                         <div className="flex flex-col items-center gap-0.5 w-8 shrink-0">
                           <span
                             className={`text-xs font-bold px-1.5 py-0.5 rounded ${
-                              isWin
+                              result === 'win'
                                 ? 'bg-[#DCFCE7] text-[#064E3B]'
+                                : result === 'draw'
+                                ? 'bg-amber-50 text-[#D97706] border border-amber-200'
                                 : 'bg-rose-50 text-[#E11D48] border border-rose-100'
                             }`}
                           >
-                            {isWin ? 'W' : 'L'}
+                            {result === 'win' ? 'W' : result === 'draw' ? 'D' : 'L'}
                           </span>
                           {rankIconUrl && (
                             <img
@@ -393,7 +401,7 @@ export default function MatchList({
                         <div className="w-12 sm:w-14 shrink-0 text-center">
                           <span
                             className={`text-sm font-mono font-semibold ${
-                              isWin ? 'text-[#10B981]' : 'text-[#E11D48]'
+                              result === 'win' ? 'text-[#10B981]' : result === 'draw' ? 'text-[#D97706]' : 'text-[#E11D48]'
                             }`}
                           >
                             {teamRoundsWon}-{opponentRoundsWon}

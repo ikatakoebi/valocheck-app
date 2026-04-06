@@ -72,7 +72,14 @@ export default function AgentStats({ matches, puuid, playerName, playerTag }: Ag
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (t: any) => t.team_id === player.team_id
     );
-    const isWin = playerTeam?.won ?? false;
+    const opponentTeam = match.teams?.find(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (t: any) => t.team_id !== player.team_id
+    );
+    const teamWon = playerTeam?.rounds?.won ?? 0;
+    const opponentWon = opponentTeam?.rounds?.won ?? 0;
+    const isWin = playerTeam?.won || teamWon > opponentWon;
+    const isDraw = !playerTeam?.won && teamWon === opponentWon;
     if (isWin) {
       existing.wins += 1;
     }
@@ -82,7 +89,7 @@ export default function AgentStats({ matches, puuid, playerName, playerTag }: Ag
     const mapEntry = existing.mapStats.get(mapName) || { wins: 0, losses: 0 };
     if (isWin) {
       mapEntry.wins += 1;
-    } else {
+    } else if (!isDraw) {
       mapEntry.losses += 1;
     }
     existing.mapStats.set(mapName, mapEntry);

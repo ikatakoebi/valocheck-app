@@ -291,7 +291,7 @@ function TeamTable({
   players,
   team,
   totalRounds,
-  isWinningTeam,
+  isWinningTeam, isDraw,
   highlightName,
   highlightTag,
   extendedStats,
@@ -301,6 +301,7 @@ function TeamTable({
   team: MatchTeam;
   totalRounds: number;
   isWinningTeam: boolean;
+  isDraw: boolean;
   highlightName?: string;
   highlightTag?: string;
   extendedStats: Map<string, ExtendedPlayerStats>;
@@ -313,9 +314,9 @@ function TeamTable({
     return acsB - acsA;
   });
 
-  const teamLabel = isWinningTeam ? '勝利' : '敗北';
-  const teamColor = isWinningTeam ? 'text-[#10B981]' : 'text-[#E11D48]';
-  const borderColor = isWinningTeam ? 'border-[#10B981]' : 'border-[#E11D48]';
+  const teamLabel = isDraw ? '引き分け' : isWinningTeam ? '勝利' : '敗北';
+  const teamColor = isDraw ? 'text-[#D97706]' : isWinningTeam ? 'text-[#10B981]' : 'text-[#E11D48]';
+  const borderColor = isDraw ? 'border-[#D97706]' : isWinningTeam ? 'border-[#10B981]' : 'border-[#E11D48]';
 
   return (
     <div className={`bg-white rounded-xl border border-[#E2E8F0] overflow-hidden border-t-2 ${borderColor} shadow-[0_1px_3px_rgba(0,0,0,0.02),0_1px_2px_rgba(0,0,0,0.04)]`}>
@@ -642,6 +643,7 @@ export default function MatchDetail({ matchId, highlightName, highlightTag }: Ma
               team={myTeam}
               totalRounds={totalRounds}
               isWinningTeam={myTeam.won}
+              isDraw={!myTeam.won && myTeam.rounds.won === (enemyTeam?.rounds?.won ?? 0)}
               highlightName={highlightName}
               highlightTag={highlightTag}
               extendedStats={extendedStats}
@@ -654,6 +656,7 @@ export default function MatchDetail({ matchId, highlightName, highlightTag }: Ma
               team={enemyTeam}
               totalRounds={totalRounds}
               isWinningTeam={enemyTeam.won}
+              isDraw={!enemyTeam.won && enemyTeam.rounds.won === (myTeam?.rounds?.won ?? 0)}
               highlightName={highlightName}
               highlightTag={highlightTag}
               extendedStats={extendedStats}

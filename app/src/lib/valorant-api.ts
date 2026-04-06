@@ -21,10 +21,16 @@ function setCache(key: string, data: unknown): void {
   cache.set(key, { data, timestamp: Date.now() });
 }
 
-async function apiFetch<T>(path: string): Promise<T> {
+export function clearCache(): void {
+  cache.clear();
+}
+
+async function apiFetch<T>(path: string, skipCache = false): Promise<T> {
   const cacheKey = path;
-  const cached = getCached<T>(cacheKey);
-  if (cached) return cached;
+  if (!skipCache) {
+    const cached = getCached<T>(cacheKey);
+    if (cached) return cached;
+  }
 
   let res: Response;
   try {

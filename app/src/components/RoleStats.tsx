@@ -111,7 +111,13 @@ function aggregateRoleStats(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (t: any) => t.team_id === player.team_id
     );
-    if (playerTeam?.won) {
+    const opponentTeam = match.teams?.find(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (t: any) => t.team_id !== player.team_id
+    );
+    const teamWon = playerTeam?.rounds?.won ?? 0;
+    const opponentWon = opponentTeam?.rounds?.won ?? 0;
+    if (playerTeam?.won || teamWon > opponentWon) {
       existing.wins += 1;
     }
 

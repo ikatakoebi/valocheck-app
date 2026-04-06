@@ -313,7 +313,8 @@ export default function PlayerContent({ name, tag }: PlayerContentProps) {
     <div className="flex flex-col gap-6">
       {/* Player Header */}
       <div className="bg-white rounded-xl p-4 sm:p-6 border border-[#E2E8F0] shadow-[0_1px_3px_rgba(0,0,0,0.02),0_1px_2px_rgba(0,0,0,0.04)]">
-        <div className="flex items-start gap-3 sm:gap-4">
+        <div className="flex items-start justify-between mb-3">
+          <div className="flex items-start gap-3 sm:gap-4 flex-1 min-w-0">
           {account.card?.wide && (
             <img
               src={account.card.wide}
@@ -366,6 +367,22 @@ export default function PlayerContent({ name, tag }: PlayerContentProps) {
               )}
             </div>
           </div>
+          </div>
+          <button
+            onClick={() => {
+              // Clear cache by forcing full reload
+              setLoading(true);
+              setMatches([]);
+              fetchData();
+            }}
+            disabled={loading}
+            className="shrink-0 px-3 py-2 bg-white border border-[#E2E8F0] text-sm font-medium rounded-lg hover:bg-[#F8FAFC] transition-colors shadow-sm flex items-center gap-1.5 text-[#64748B] hover:text-[#0F172A] disabled:opacity-50"
+          >
+            <svg className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            更新
+          </button>
         </div>
       </div>
 
