@@ -45,11 +45,44 @@ const ROLE_JAPANESE: Record<string, string> = {
   'Sentinel': 'センチネル',
 };
 
-const ROLE_ICONS: Record<string, string> = {
-  'Duelist': '⚔',
-  'Controller': '☁',
-  'Initiator': '◎',
-  'Sentinel': '🛡',
+// SVG role icons
+function DuelistIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8 2L8 11M5 5L8 2L11 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M4 14h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+function ControllerIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="8" cy="8" r="3" stroke="currentColor" strokeWidth="1.5" />
+      <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1" strokeDasharray="3 2" />
+    </svg>
+  );
+}
+function InitiatorIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="8" cy="6" r="4" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M8 10V14M6 12h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+function SentinelIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8 2L3 5V9C3 11.5 5.5 14 8 14C10.5 14 13 11.5 13 9V5L8 2Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+const ROLE_ICON_COMPONENTS: Record<string, React.FC<{ className?: string }>> = {
+  'Duelist': DuelistIcon,
+  'Controller': ControllerIcon,
+  'Initiator': InitiatorIcon,
+  'Sentinel': SentinelIcon,
 };
 
 interface RoleStat {
@@ -170,7 +203,7 @@ export default function RoleStats({ matches, puuid, playerName, playerTag }: Rol
               >
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-lg">{ROLE_ICONS[roleStat.role]}</span>
+                    {(() => { const Icon = ROLE_ICON_COMPONENTS[roleStat.role]; return Icon ? <Icon className="w-5 h-5" /> : null; })()}
                     <div>
                       <span className="text-[#0F172A] text-sm font-semibold">
                         {ROLE_JAPANESE[roleStat.role]}
