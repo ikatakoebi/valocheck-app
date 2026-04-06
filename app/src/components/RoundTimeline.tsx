@@ -8,58 +8,60 @@ interface RoundTimelineProps {
   enemyTeamId: string;
 }
 
-// Elimination icon (X pattern like tracker.gg)
-function EliminatedIcon({ className }: { className?: string }) {
+// Elimination: circle with X through it (like tracker.gg)
+function EliminationIcon({ color }: { color: string }) {
   return (
-    <svg className={className} viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-      <path d="M3 3L8 8M8 8L13 3M8 8L3 13M8 8L13 13" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" fill="none" />
-      <path d="M1 1L5 5M11 1L7 5M1 15L5 11M11 15L7 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.5" />
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="8" stroke={color} strokeWidth="2.5" />
+      <path d="M8 8L16 16M16 8L8 16" stroke={color} strokeWidth="2.5" strokeLinecap="round" />
     </svg>
   );
 }
 
-// Spike detonated icon
-function DetonatedIcon({ className }: { className?: string }) {
+// Defuse: wire cutter / pliers shape (like tracker.gg)
+function DefuseIcon({ color }: { color: string }) {
   return (
-    <svg className={className} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M8 1V4M8 12V15M1 8H4M12 8H15M3 3L5 5M11 3L9 5M3 13L5 11M11 13L9 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-      <circle cx="8" cy="8" r="2.5" fill="currentColor" />
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path d="M9 2L12 10L15 2" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M9 22L12 14L15 22" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
 
-// Spike defused icon
-function DefusedIcon({ className }: { className?: string }) {
+// Detonation: spike explosion (starburst)
+function DetonationIcon({ color }: { color: string }) {
   return (
-    <svg className={className} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M8 2L13 5.5V10.5L8 14L3 10.5V5.5L8 2Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
-      <path d="M6 8L7.5 9.5L10.5 6.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="4" fill={color} />
+      <path d="M12 2V7M12 17V22M2 12H7M17 12H22M4.9 4.9L8.1 8.1M15.9 15.9L19.1 19.1M19.1 4.9L15.9 8.1M8.1 15.9L4.9 19.1" stroke={color} strokeWidth="2" strokeLinecap="round" />
     </svg>
   );
 }
 
-// Timer expired icon (running person like tracker.gg)
-function TimerIcon({ className }: { className?: string }) {
+// Timer expired: clock
+function TimerIcon({ color }: { color: string }) {
   return (
-    <svg className={className} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="9" cy="3.5" r="1.5" fill="currentColor" />
-      <path d="M6 7L8 5.5L10 7L9 10L11 13M7 10L5 13M8 5.5L7 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="13" r="8" stroke={color} strokeWidth="2" />
+      <path d="M12 9V13L15 15" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M10 3H14" stroke={color} strokeWidth="2" strokeLinecap="round" />
     </svg>
   );
 }
 
-function getRoundIcon(endType: string, size: string) {
+function getRoundIcon(endType: string, isWin: boolean) {
+  const color = isWin ? '#10B981' : '#E11D48';
   switch (endType) {
     case 'Eliminated':
-      return <EliminatedIcon className={size} />;
+      return <EliminationIcon color={color} />;
     case 'Bomb detonated':
-      return <DetonatedIcon className={size} />;
+      return <DetonationIcon color={color} />;
     case 'Bomb defused':
-      return <DefusedIcon className={size} />;
+      return <DefuseIcon color={color} />;
     case 'Round timer expired':
-      return <TimerIcon className={size} />;
+      return <TimerIcon color={color} />;
     default:
-      return <EliminatedIcon className={size} />;
+      return <EliminationIcon color={color} />;
   }
 }
 
@@ -94,17 +96,13 @@ export default function RoundTimeline({ rounds, myTeamId, enemyTeamId }: RoundTi
 
   return (
     <div className="bg-white rounded-xl p-4 border border-[#E2E8F0] shadow-[0_1px_3px_rgba(0,0,0,0.02),0_1px_2px_rgba(0,0,0,0.04)]">
-      <h3 className="text-[#0F172A] text-sm font-bold mb-3">ラウンドタイムライン</h3>
-
-      {/* 2-row layout like tracker.gg */}
       <div className="overflow-x-auto">
         <div className="inline-flex flex-col min-w-fit">
-          {/* Row labels + Score */}
-          <div className="flex items-center gap-0">
-            {/* My team row */}
-            <div className="w-20 shrink-0 flex items-center gap-2">
+          {/* My team row */}
+          <div className="flex items-center">
+            <div className="w-24 shrink-0 flex items-center gap-2">
               <span className="text-xs font-bold text-[#0F172A]">味方</span>
-              <span className="text-sm font-mono font-bold text-[#10B981]">{myScore}</span>
+              <span className="text-lg font-mono font-bold text-[#10B981]">{myScore}</span>
             </div>
             <div className="flex items-center">
               {roundData.map((rd) => (
@@ -114,15 +112,13 @@ export default function RoundTimeline({ rounds, myTeamId, enemyTeamId }: RoundTi
                     title={`R${rd.round}: ${getEndTypeLabel(rd.endType)} (${rd.myScore}-${rd.enemyScore})`}
                   >
                     {rd.myWin ? (
-                      <span className="text-[#10B981]">
-                        {getRoundIcon(rd.endType, 'w-4 h-4')}
-                      </span>
+                      getRoundIcon(rd.endType, true)
                     ) : (
                       <span className="w-1.5 h-1.5 rounded-full bg-[#CBD5E1]" />
                     )}
                   </div>
                   {rd.isHalf && rd.round < rounds.length && (
-                    <div className="w-px h-7 bg-[#E2E8F0] mx-0.5 shrink-0" />
+                    <div className="w-px h-6 bg-[#E2E8F0] mx-1 shrink-0" />
                   )}
                 </div>
               ))}
@@ -130,10 +126,10 @@ export default function RoundTimeline({ rounds, myTeamId, enemyTeamId }: RoundTi
           </div>
 
           {/* Enemy team row */}
-          <div className="flex items-center gap-0">
-            <div className="w-20 shrink-0 flex items-center gap-2">
+          <div className="flex items-center">
+            <div className="w-24 shrink-0 flex items-center gap-2">
               <span className="text-xs font-bold text-[#0F172A]">敵</span>
-              <span className="text-sm font-mono font-bold text-[#E11D48]">{enemyScore}</span>
+              <span className="text-lg font-mono font-bold text-[#E11D48]">{enemyScore}</span>
             </div>
             <div className="flex items-center">
               {roundData.map((rd) => (
@@ -143,15 +139,13 @@ export default function RoundTimeline({ rounds, myTeamId, enemyTeamId }: RoundTi
                     title={`R${rd.round}: ${getEndTypeLabel(rd.endType)} (${rd.myScore}-${rd.enemyScore})`}
                   >
                     {!rd.myWin ? (
-                      <span className="text-[#E11D48]">
-                        {getRoundIcon(rd.endType, 'w-4 h-4')}
-                      </span>
+                      getRoundIcon(rd.endType, false)
                     ) : (
                       <span className="w-1.5 h-1.5 rounded-full bg-[#CBD5E1]" />
                     )}
                   </div>
                   {rd.isHalf && rd.round < rounds.length && (
-                    <div className="w-px h-7 bg-[#E2E8F0] mx-0.5 shrink-0" />
+                    <div className="w-px h-6 bg-[#E2E8F0] mx-1 shrink-0" />
                   )}
                 </div>
               ))}
@@ -159,8 +153,8 @@ export default function RoundTimeline({ rounds, myTeamId, enemyTeamId }: RoundTi
           </div>
 
           {/* Round numbers */}
-          <div className="flex items-center gap-0 mt-0.5">
-            <div className="w-20 shrink-0" />
+          <div className="flex items-center mt-0.5">
+            <div className="w-24 shrink-0" />
             <div className="flex items-center">
               {roundData.map((rd) => (
                 <div key={`num-${rd.round}`} className="flex items-center">
@@ -168,7 +162,7 @@ export default function RoundTimeline({ rounds, myTeamId, enemyTeamId }: RoundTi
                     <span className="text-[10px] text-[#94A3B8] font-mono">{rd.round}</span>
                   </div>
                   {rd.isHalf && rd.round < rounds.length && (
-                    <div className="w-px mx-0.5 shrink-0" />
+                    <div className="w-px mx-1 shrink-0" />
                   )}
                 </div>
               ))}
