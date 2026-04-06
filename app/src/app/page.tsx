@@ -8,7 +8,7 @@ export default function HomePage() {
         {/* Logo */}
         <div className="flex flex-col items-center gap-2">
           <h1 className="text-4xl sm:text-5xl font-black tracking-tight">
-            <span className="text-indigo-600">VALO</span>
+            <span className="text-teal-600">VALO</span>
             <span className="text-slate-800">CHECK</span>
           </h1>
           <p className="text-muted-foreground text-sm">

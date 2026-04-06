@@ -312,7 +312,7 @@ export default function PlayerContent({ name, tag }: PlayerContentProps) {
   return (
     <div className="flex flex-col gap-6">
       {/* Player Header */}
-      <div className="bg-white rounded-xl p-4 sm:p-6 border border-border shadow-sm">
+      <div className="bg-white rounded-xl p-4 sm:p-6 border border-[#E2E8F0] shadow-[0_1px_3px_rgba(0,0,0,0.02),0_1px_2px_rgba(0,0,0,0.04)]">
         <div className="flex items-start gap-3 sm:gap-4">
           {account.card?.wide && (
             <img
@@ -331,14 +331,14 @@ export default function PlayerContent({ name, tag }: PlayerContentProps) {
                 <span className="text-muted-foreground font-normal">#{account.tag}</span>
               </h1>
               {regionLabel && (
-                <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-600 shrink-0">
+                <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-[#F0FDFA] text-[#0D9488] shrink-0">
                   {regionLabel}
                 </span>
               )}
             </div>
             <div className="flex items-center gap-3 mt-1 flex-wrap">
               <span className="text-muted-foreground text-sm">
-                レベル <span className="text-foreground font-semibold">{account.account_level}</span>
+                レベル <span className="text-foreground font-mono font-semibold">{account.account_level}</span>
               </span>
               {peakTierTranslated && (
                 <span className="text-muted-foreground text-sm flex items-center gap-1">
@@ -353,11 +353,11 @@ export default function PlayerContent({ name, tag }: PlayerContentProps) {
                       }}
                     />
                   )}
-                  <span className="text-amber-600 font-medium">
+                  <span className="text-[#D97706] font-medium">
                     {peakTierTranslated}
                   </span>
                   {peakRank?.rr !== undefined && (
-                    <span className="text-muted-foreground/70 text-xs">({peakRank.rr} RR)</span>
+                    <span className="text-muted-foreground/70 text-xs font-mono">({peakRank.rr} RR)</span>
                   )}
                   {peakRank?.season?.short && (
                     <span className="text-muted-foreground/70 text-xs">- {peakRank.season.short}</span>
@@ -378,7 +378,7 @@ export default function PlayerContent({ name, tag }: PlayerContentProps) {
       />
 
       {/* Playlist & Season Filter */}
-      <div className="bg-white rounded-xl p-4 border border-border shadow-sm">
+      <div className="bg-white rounded-xl p-4 border border-[#E2E8F0] shadow-[0_1px_3px_rgba(0,0,0,0.02),0_1px_2px_rgba(0,0,0,0.04)]">
         <div className="flex items-center gap-3 flex-wrap">
           <span className="text-muted-foreground text-sm font-medium shrink-0">プレイリスト:</span>
           <PlaylistFilter

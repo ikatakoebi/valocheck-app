@@ -120,91 +120,94 @@ export default function WeaponStats({ matches, puuid }: WeaponStatsProps) {
   const maxKills = weapons[0]?.kills || 1;
 
   return (
-    <div className="bg-white rounded-xl p-4 sm:p-6 border border-border shadow-sm">
-      <h2 className="text-foreground text-sm font-semibold uppercase tracking-wider mb-4">
-        武器統計
-      </h2>
+    <div className="bg-white rounded-xl border border-[#E2E8F0] shadow-[0_1px_3px_rgba(0,0,0,0.02),0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-1px_rgba(0,0,0,0.03)] transition-shadow duration-200 overflow-hidden">
+      <div className="w-full h-0.5 bg-[#334155]" />
+      <div className="p-4 sm:p-6">
+        <h2 className="text-xs font-medium text-[#64748B] uppercase tracking-wider mb-4">
+          武器統計
+        </h2>
 
-      <div className="flex flex-col gap-3">
-        {weapons.map((weapon) => {
-          const totalShots = weapon.headshots + weapon.bodyshots + weapon.legshots;
-          const headPct = totalShots > 0 ? (weapon.headshots / totalShots) * 100 : 0;
-          const bodyPct = totalShots > 0 ? (weapon.bodyshots / totalShots) * 100 : 0;
-          const legPct = totalShots > 0 ? (weapon.legshots / totalShots) * 100 : 0;
-          const killBarWidth = (weapon.kills / maxKills) * 100;
+        <div className="flex flex-col gap-3">
+          {weapons.map((weapon) => {
+            const totalShots = weapon.headshots + weapon.bodyshots + weapon.legshots;
+            const headPct = totalShots > 0 ? (weapon.headshots / totalShots) * 100 : 0;
+            const bodyPct = totalShots > 0 ? (weapon.bodyshots / totalShots) * 100 : 0;
+            const legPct = totalShots > 0 ? (weapon.legshots / totalShots) * 100 : 0;
+            const killBarWidth = (weapon.kills / maxKills) * 100;
 
-          return (
-            <div
-              key={weapon.weaponName}
-              className="bg-slate-50 rounded-xl p-3 sm:p-4 border border-border"
-            >
-              {/* Header: name, category, kills */}
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-foreground text-sm font-semibold">{weapon.weaponName}</span>
-                  <span className="text-muted-foreground text-xs px-1.5 py-0.5 rounded-md bg-white border border-border">
-                    {weapon.category}
-                  </span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="text-foreground text-lg font-bold">{weapon.kills}</span>
-                  <span className="text-muted-foreground text-xs">キル</span>
-                </div>
-              </div>
-
-              {/* Kill bar */}
-              <div className="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden mb-2">
-                <div
-                  className="h-full rounded-full bg-indigo-500 transition-all"
-                  style={{ width: `${killBarWidth}%` }}
-                />
-              </div>
-
-              {/* H/B/L breakdown */}
-              {totalShots > 0 && (
-                <div className="flex items-center gap-3 text-xs">
-                  {/* Stacked bar */}
-                  <div className="flex-1 h-2.5 bg-slate-200 rounded-full overflow-hidden flex">
-                    <div
-                      className="h-full transition-all"
-                      style={{
-                        width: `${headPct}%`,
-                        backgroundColor: '#e11d48',
-                      }}
-                    />
-                    <div
-                      className="h-full transition-all"
-                      style={{
-                        width: `${bodyPct}%`,
-                        backgroundColor: '#6366f1',
-                      }}
-                    />
-                    <div
-                      className="h-full transition-all"
-                      style={{
-                        width: `${legPct}%`,
-                        backgroundColor: '#94a3b8',
-                      }}
-                    />
-                  </div>
-
-                  {/* Labels */}
-                  <div className="flex items-center gap-2 shrink-0">
-                    <span className="text-rose-600 font-medium">
-                      H {headPct.toFixed(0)}%
-                    </span>
-                    <span className="text-indigo-600 font-medium">
-                      B {bodyPct.toFixed(0)}%
-                    </span>
-                    <span className="text-slate-500 font-medium">
-                      L {legPct.toFixed(0)}%
+            return (
+              <div
+                key={weapon.weaponName}
+                className="bg-white rounded-xl p-3 sm:p-4 border border-[#E2E8F0]"
+              >
+                {/* Header: name, category, kills */}
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[#0F172A] text-sm font-semibold">{weapon.weaponName}</span>
+                    <span className="text-[#64748B] text-xs px-1.5 py-0.5 rounded-md bg-white border border-[#E2E8F0]">
+                      {weapon.category}
                     </span>
                   </div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[#0F172A] text-lg font-mono font-bold">{weapon.kills}</span>
+                    <span className="text-[#64748B] text-xs">キル</span>
+                  </div>
                 </div>
-              )}
-            </div>
-          );
-        })}
+
+                {/* Kill bar */}
+                <div className="w-full h-1.5 bg-[#F8FAFC] rounded-full overflow-hidden mb-2">
+                  <div
+                    className="h-full rounded-full bg-[#0D9488] transition-all"
+                    style={{ width: `${killBarWidth}%` }}
+                  />
+                </div>
+
+                {/* H/B/L breakdown */}
+                {totalShots > 0 && (
+                  <div className="flex items-center gap-3 text-xs">
+                    {/* Stacked bar */}
+                    <div className="flex-1 h-2.5 bg-[#F8FAFC] rounded-full overflow-hidden flex">
+                      <div
+                        className="h-full transition-all"
+                        style={{
+                          width: `${headPct}%`,
+                          backgroundColor: '#D97706',
+                        }}
+                      />
+                      <div
+                        className="h-full transition-all"
+                        style={{
+                          width: `${bodyPct}%`,
+                          backgroundColor: 'rgba(15,23,42,0.8)',
+                        }}
+                      />
+                      <div
+                        className="h-full transition-all"
+                        style={{
+                          width: `${legPct}%`,
+                          backgroundColor: 'rgba(148,163,184,0.5)',
+                        }}
+                      />
+                    </div>
+
+                    {/* Labels */}
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="text-[#D97706] font-mono font-medium">
+                        H {headPct.toFixed(0)}%
+                      </span>
+                      <span className="text-[#0F172A] font-mono font-medium">
+                        B {bodyPct.toFixed(0)}%
+                      </span>
+                      <span className="text-[#94A3B8] font-mono font-medium">
+                        L {legPct.toFixed(0)}%
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

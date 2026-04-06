@@ -4,3 +4,5 @@ node_modules/
 test-screenshots/
 *.png
 *.jpg
+.aidesigner/*
+!.aidesigner/.gitkeep

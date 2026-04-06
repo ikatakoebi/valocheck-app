@@ -28,10 +28,10 @@ export default function SeasonFilter({ seasons, current, onChange, loading }: Se
         value={current}
         onChange={(e) => onChange(e.target.value)}
         disabled={loading}
-        className={`appearance-none pl-3 pr-8 py-1.5 rounded-lg text-sm font-medium border transition-all duration-150 bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 ${
+        className={`appearance-none pl-3 pr-8 py-1.5 rounded-lg text-sm font-medium border transition-all duration-150 bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#0D9488]/30 focus:border-[#0D9488] ${
           current
-            ? 'border-indigo-600 text-indigo-600'
-            : 'border-border text-muted-foreground hover:border-indigo-300'
+            ? 'border-[#0D9488] text-[#0D9488]'
+            : 'border-[#E2E8F0] text-[#64748B] hover:border-[#0D9488]/30'
         } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
       >
         <option value="">全シーズン</option>
@@ -42,7 +42,7 @@ export default function SeasonFilter({ seasons, current, onChange, loading }: Se
         ))}
       </select>
       <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-        <svg className="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-4 h-4 text-[#64748B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </div>

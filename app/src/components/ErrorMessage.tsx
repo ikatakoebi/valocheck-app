@@ -11,7 +11,7 @@ export default function ErrorMessage({
     <div className="flex flex-col items-center justify-center py-12 gap-4">
       <div className="w-12 h-12 rounded-full bg-rose-50 flex items-center justify-center">
         <svg
-          className="w-6 h-6 text-rose-500"
+          className="w-6 h-6 text-[#E11D48]"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -24,11 +24,11 @@ export default function ErrorMessage({
           />
         </svg>
       </div>
-      <p className="text-foreground text-center">{message}</p>
+      <p className="text-[#0F172A] text-center">{message}</p>
       {onRetry && (
         <button
           onClick={onRetry}
-          className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg transition-colors text-sm shadow-sm"
+          className="px-4 py-2 bg-[#0D9488] hover:bg-[#0F766E] text-white rounded-lg transition-colors text-sm shadow-sm"
         >
           再試行
         </button>

@@ -81,28 +81,28 @@ export default function DuelsTab({ kills, players, myTeamId, enemyTeamId }: Duel
   }
 
   return (
-    <div className="bg-white rounded-xl border border-border overflow-hidden shadow-sm">
-      <div className="px-4 py-3 border-b border-border">
-        <span className="text-foreground text-sm font-bold">対面キルマトリクス</span>
-        <span className="text-muted-foreground text-xs ml-2">(味方 vs 敵)</span>
+    <div className="bg-white rounded-xl border border-[#E2E8F0] overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.02),0_1px_2px_rgba(0,0,0,0.04)]">
+      <div className="px-4 py-3 border-b border-[#E2E8F0]">
+        <span className="text-[#0F172A] text-sm font-bold">対面キルマトリクス</span>
+        <span className="text-[#64748B] text-xs ml-2">(味方 vs 敵)</span>
       </div>
 
       <div className="overflow-x-auto">
         <table className="w-full text-sm border-collapse">
           <thead>
-            <tr className="border-b border-border/50">
-              <th className="px-3 py-2 text-left text-muted-foreground text-xs uppercase min-w-[120px]">
+            <tr className="border-b border-[#E2E8F0]/50">
+              <th className="px-3 py-2 text-left text-xs font-medium text-[#64748B] uppercase tracking-wider min-w-[120px]">
                 味方 ＼ 敵
               </th>
               {enemyPlayers.map(ep => (
-                <th key={ep.puuid} className="px-2 py-2 text-center text-rose-500 text-xs font-medium min-w-[70px]">
+                <th key={ep.puuid} className="px-2 py-2 text-center text-[#E11D48] text-xs font-medium min-w-[70px]">
                   <div className="truncate max-w-[70px]" title={`${ep.name}#${ep.tag}`}>
                     {ep.name}
                   </div>
-                  <div className="text-[10px] text-muted-foreground truncate">{ep.agent?.name || ''}</div>
+                  <div className="text-[10px] text-[#64748B] truncate">{ep.agent?.name || ''}</div>
                 </th>
               ))}
-              <th className="px-2 py-2 text-center text-muted-foreground text-xs uppercase border-l border-border">
+              <th className="px-2 py-2 text-center text-xs font-medium text-[#64748B] uppercase tracking-wider border-l border-[#E2E8F0]">
                 合計
               </th>
             </tr>
@@ -112,12 +112,12 @@ export default function DuelsTab({ kills, players, myTeamId, enemyTeamId }: Duel
               const row = matrix.get(mp.puuid);
               const totals = myPlayerTotals.get(mp.puuid);
               return (
-                <tr key={mp.puuid} className="border-b border-border/20 hover:bg-slate-50/50">
+                <tr key={mp.puuid} className="border-b border-[#E2E8F0]/20 hover:bg-[#F8FAFC]/50">
                   <td className="px-3 py-2">
-                    <div className="text-emerald-600 text-xs font-medium truncate max-w-[120px]">
+                    <div className="text-[#10B981] text-xs font-medium truncate max-w-[120px]">
                       {mp.name}
                     </div>
-                    <div className="text-[10px] text-muted-foreground">{mp.agent?.name || ''}</div>
+                    <div className="text-[10px] text-[#64748B]">{mp.agent?.name || ''}</div>
                   </td>
                   {enemyPlayers.map(ep => {
                     const cell = row?.get(ep.puuid);
@@ -127,13 +127,13 @@ export default function DuelsTab({ kills, players, myTeamId, enemyTeamId }: Duel
                     return (
                       <td key={ep.puuid} className="px-2 py-2 text-center">
                         <div className="flex flex-col items-center">
-                          <div className="text-xs">
-                            <span className="text-emerald-600">{k}</span>
-                            <span className="text-muted-foreground/40 mx-0.5">:</span>
-                            <span className="text-rose-500">{d}</span>
+                          <div className="text-xs font-mono">
+                            <span className="text-[#10B981]">{k}</span>
+                            <span className="text-[#94A3B8] mx-0.5">:</span>
+                            <span className="text-[#E11D48]">{d}</span>
                           </div>
                           {(k > 0 || d > 0) && (
-                            <div className={`text-[10px] ${diff > 0 ? 'text-emerald-600' : diff < 0 ? 'text-rose-500' : 'text-muted-foreground'}`}>
+                            <div className={`text-[10px] font-mono ${diff > 0 ? 'text-[#10B981]' : diff < 0 ? 'text-[#E11D48]' : 'text-[#64748B]'}`}>
                               {diff > 0 ? '+' : ''}{diff}
                             </div>
                           )}
@@ -141,40 +141,40 @@ export default function DuelsTab({ kills, players, myTeamId, enemyTeamId }: Duel
                       </td>
                     );
                   })}
-                  <td className="px-2 py-2 text-center border-l border-border">
-                    <div className="text-xs">
-                      <span className="text-emerald-600 font-medium">{totals?.totalKills || 0}</span>
-                      <span className="text-muted-foreground/40 mx-0.5">:</span>
-                      <span className="text-rose-500 font-medium">{totals?.totalDeaths || 0}</span>
+                  <td className="px-2 py-2 text-center border-l border-[#E2E8F0]">
+                    <div className="text-xs font-mono">
+                      <span className="text-[#10B981] font-medium">{totals?.totalKills || 0}</span>
+                      <span className="text-[#94A3B8] mx-0.5">:</span>
+                      <span className="text-[#E11D48] font-medium">{totals?.totalDeaths || 0}</span>
                     </div>
                   </td>
                 </tr>
               );
             })}
             {/* Enemy totals row */}
-            <tr className="border-t border-border">
-              <td className="px-3 py-2 text-muted-foreground text-xs uppercase">合計</td>
+            <tr className="border-t border-[#E2E8F0]">
+              <td className="px-3 py-2 text-[#64748B] text-xs uppercase">合計</td>
               {enemyPlayers.map(ep => {
                 const totals = enemyPlayerTotals.get(ep.puuid);
                 return (
                   <td key={ep.puuid} className="px-2 py-2 text-center">
-                    <div className="text-xs">
-                      <span className="text-rose-500 font-medium">{totals?.totalKills || 0}</span>
-                      <span className="text-muted-foreground/40 mx-0.5">:</span>
-                      <span className="text-emerald-600 font-medium">{totals?.totalDeaths || 0}</span>
+                    <div className="text-xs font-mono">
+                      <span className="text-[#E11D48] font-medium">{totals?.totalKills || 0}</span>
+                      <span className="text-[#94A3B8] mx-0.5">:</span>
+                      <span className="text-[#10B981] font-medium">{totals?.totalDeaths || 0}</span>
                     </div>
                   </td>
                 );
               })}
-              <td className="px-2 py-2 border-l border-border" />
+              <td className="px-2 py-2 border-l border-[#E2E8F0]" />
             </tr>
           </tbody>
         </table>
       </div>
 
       {/* Explanation */}
-      <div className="px-4 py-2 border-t border-border/50 text-xs text-muted-foreground">
-        各セル: <span className="text-emerald-600">味方キル数</span> : <span className="text-rose-500">敵キル数</span>
+      <div className="px-4 py-2 border-t border-[#E2E8F0]/50 text-xs text-[#64748B]">
+        各セル: <span className="text-[#10B981]">味方キル数</span> : <span className="text-[#E11D48]">敵キル数</span>
       </div>
     </div>
   );

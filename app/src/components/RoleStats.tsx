@@ -136,83 +136,85 @@ export default function RoleStats({ matches, puuid, playerName, playerTag }: Rol
   }
 
   return (
-    <div className="bg-white rounded-xl p-4 sm:p-6 border border-border shadow-sm">
-      <h2 className="text-foreground text-sm font-semibold uppercase tracking-wider mb-4">
-        ロール別統計
-      </h2>
+    <div className="bg-white rounded-xl border border-[#E2E8F0] shadow-[0_1px_3px_rgba(0,0,0,0.02),0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-1px_rgba(0,0,0,0.03)] transition-shadow duration-200 overflow-hidden">
+      <div className="w-full h-0.5 bg-[#0F172A]" />
+      <div className="p-4 sm:p-6">
+        <h2 className="text-[#0F172A] text-sm font-semibold uppercase tracking-wider mb-4">
+          ロール別統計
+        </h2>
 
-      <div className="flex flex-col gap-3">
-        {roles.map((roleStat) => {
-          const winRate = roleStat.gamesPlayed > 0
-            ? Math.round((roleStat.wins / roleStat.gamesPlayed) * 100)
-            : 0;
-          const losses = roleStat.gamesPlayed - roleStat.wins;
-          const kda = roleStat.deaths > 0
-            ? ((roleStat.kills + roleStat.assists) / roleStat.deaths)
-            : (roleStat.kills + roleStat.assists);
-          const avgKills = (roleStat.kills / roleStat.gamesPlayed).toFixed(1);
-          const avgDeaths = (roleStat.deaths / roleStat.gamesPlayed).toFixed(1);
-          const avgAssists = (roleStat.assists / roleStat.gamesPlayed).toFixed(1);
+        <div className="flex flex-col gap-3">
+          {roles.map((roleStat) => {
+            const winRate = roleStat.gamesPlayed > 0
+              ? Math.round((roleStat.wins / roleStat.gamesPlayed) * 100)
+              : 0;
+            const losses = roleStat.gamesPlayed - roleStat.wins;
+            const kda = roleStat.deaths > 0
+              ? ((roleStat.kills + roleStat.assists) / roleStat.deaths)
+              : (roleStat.kills + roleStat.assists);
+            const avgKills = (roleStat.kills / roleStat.gamesPlayed).toFixed(1);
+            const avgDeaths = (roleStat.deaths / roleStat.gamesPlayed).toFixed(1);
+            const avgAssists = (roleStat.assists / roleStat.gamesPlayed).toFixed(1);
+            const isDuelist = roleStat.role === 'Duelist';
 
-          return (
-            <div
-              key={roleStat.role}
-              className="bg-slate-50 rounded-xl p-3 sm:p-4 border border-border"
-            >
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-lg">{ROLE_ICONS[roleStat.role]}</span>
-                  <div>
-                    <span className="text-foreground text-sm font-semibold">
-                      {ROLE_JAPANESE[roleStat.role]}
-                    </span>
-                    <span className="text-muted-foreground text-xs ml-2">
-                      {roleStat.gamesPlayed}試合
-                    </span>
+            return (
+              <div
+                key={roleStat.role}
+                className="bg-white rounded-xl p-3 sm:p-4 border border-[#E2E8F0]"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">{ROLE_ICONS[roleStat.role]}</span>
+                    <div>
+                      <span className="text-[#0F172A] text-sm font-semibold">
+                        {ROLE_JAPANESE[roleStat.role]}
+                      </span>
+                      <span className="text-[#64748B] text-xs ml-2 font-mono">
+                        {roleStat.gamesPlayed}試合
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="text-right">
+                      <span className="text-[#64748B] text-xs block">KDA</span>
+                      <span className="text-[#0F172A] text-sm font-mono font-semibold">{kda.toFixed(2)}</span>
+                    </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="text-right">
-                    <span className="text-muted-foreground text-xs block">KDA</span>
-                    <span className="text-foreground text-sm font-semibold">{kda.toFixed(2)}</span>
+
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`text-sm font-mono font-bold ${
+                        winRate >= 50 ? 'text-[#059669]' : 'text-[#E11D48]'
+                      }`}
+                    >
+                      {winRate}%
+                    </span>
+                    <span className="text-[#64748B] text-xs font-mono">
+                      {roleStat.wins}W - {losses}L
+                    </span>
+                  </div>
+                  <div className="text-sm font-mono">
+                    <span className="text-[#10B981]">{avgKills}</span>
+                    <span className="text-[#94A3B8]"> / </span>
+                    <span className="text-[#E11D48]">{avgDeaths}</span>
+                    <span className="text-[#94A3B8]"> / </span>
+                    <span className="text-[#64748B]">{avgAssists}</span>
                   </div>
                 </div>
-              </div>
 
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span
-                    className={`text-sm font-bold ${
-                      winRate >= 50 ? 'text-emerald-600' : 'text-rose-500'
-                    }`}
-                  >
-                    {winRate}%
-                  </span>
-                  <span className="text-muted-foreground text-xs">
-                    {roleStat.wins}W - {losses}L
-                  </span>
-                </div>
-                <div className="text-sm">
-                  <span className="text-emerald-600">{avgKills}</span>
-                  <span className="text-muted-foreground/50"> / </span>
-                  <span className="text-rose-500">{avgDeaths}</span>
-                  <span className="text-muted-foreground/50"> / </span>
-                  <span className="text-slate-600">{avgAssists}</span>
+                {/* Win rate bar */}
+                <div className="w-full h-2 bg-[#F8FAFC] rounded-full overflow-hidden mt-2">
+                  <div
+                    className={`h-full rounded-full transition-all ${isDuelist ? 'bg-[#0F172A]' : 'bg-[#334155]'}`}
+                    style={{ width: `${winRate}%` }}
+                  />
                 </div>
               </div>
-
-              {/* Win rate bar */}
-              <div className="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden mt-2">
-                <div
-                  className={`h-full rounded-full transition-all ${
-                    winRate >= 50 ? 'bg-emerald-500' : 'bg-rose-400'
-                  }`}
-                  style={{ width: `${winRate}%` }}
-                />
-              </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
   );

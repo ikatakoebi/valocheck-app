@@ -115,24 +115,136 @@ export default function AgentStats({ matches, puuid, playerName, playerTag }: Ag
   }
 
   return (
-    <div className="bg-white rounded-xl p-4 sm:p-6 border border-border shadow-sm">
-      <h2 className="text-foreground text-sm font-semibold uppercase tracking-wider mb-3 sm:mb-4">
-        エージェント統計
-      </h2>
-      <div className="overflow-x-auto">
-        <div className="min-w-[640px]">
-          {/* Header */}
-          <div className="grid grid-cols-[minmax(140px,1.5fr)_60px_60px_65px_60px_60px_65px_110px] gap-2 px-3 py-2 text-muted-foreground text-xs uppercase tracking-wider border-b border-border">
-            <span>エージェント</span>
-            <span className="text-center">試合</span>
-            <span className="text-center">勝率</span>
-            <span className="text-center">K/D</span>
-            <span className="text-center">ADR</span>
-            <span className="text-center">ACS</span>
-            <span className="text-center">{`DD\u0394`}</span>
-            <span className="text-center">Best Map</span>
-          </div>
+    <div className="bg-white rounded-xl border border-[#E2E8F0] shadow-[0_1px_3px_rgba(0,0,0,0.02),0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-1px_rgba(0,0,0,0.03)] transition-shadow duration-200 overflow-hidden">
+      <div className="w-full h-0.5 bg-[#0D9488]" />
+      <div className="p-4 sm:p-6">
+        <h2 className="text-[#0F172A] text-xs font-medium uppercase tracking-wider text-[#64748B] mb-3 sm:mb-4">
+          エージェント統計
+        </h2>
+        <div className="overflow-x-auto">
+          <div className="min-w-[640px]">
+            {/* Header */}
+            <div className="grid grid-cols-[minmax(140px,1.5fr)_60px_60px_65px_60px_60px_65px_110px] gap-2 px-3 py-2 text-xs font-medium text-[#64748B] uppercase tracking-wider border-b border-[#E2E8F0]">
+              <span>エージェント</span>
+              <span className="text-center">試合</span>
+              <span className="text-center">勝率</span>
+              <span className="text-center">K/D</span>
+              <span className="text-center">ADR</span>
+              <span className="text-center">ACS</span>
+              <span className="text-center">{`DD\u0394`}</span>
+              <span className="text-center">Best Map</span>
+            </div>
 
+            {sortedAgents.map((agent) => {
+              const winRate = agent.gamesPlayed > 0
+                ? Math.round((agent.wins / agent.gamesPlayed) * 100)
+                : 0;
+              const kd = agent.deaths > 0
+                ? (agent.kills / agent.deaths)
+                : agent.kills;
+              const adr = agent.totalRounds > 0
+                ? (agent.totalDamageDealt / agent.totalRounds)
+                : 0;
+              const acs = agent.totalRounds > 0
+                ? (agent.totalScore / agent.totalRounds)
+                : 0;
+              const ddDelta = agent.totalRounds > 0
+                ? ((agent.totalDamageDealt - agent.totalDamageReceived) / agent.totalRounds)
+                : 0;
+
+              // Best Map calculation
+              let bestMapName = '-';
+              let bestMapWinRate = 0;
+              agent.mapStats.forEach((stats, map) => {
+                const total = stats.wins + stats.losses;
+                if (total >= 1) {
+                  const wr = (stats.wins / total) * 100;
+                  if (wr > bestMapWinRate || (wr === bestMapWinRate && total > 0)) {
+                    bestMapWinRate = wr;
+                    bestMapName = map;
+                  }
+                }
+              });
+
+              const agentIconUrl = getAgentIconUrl(agent.agentId);
+
+              return (
+                <div
+                  key={agent.agentName}
+                  className="grid grid-cols-[minmax(140px,1.5fr)_60px_60px_65px_60px_60px_65px_110px] gap-2 px-3 py-4 items-center hover:bg-[#F8FAFC]/50 transition-colors border-b border-[#E2E8F0]/50"
+                >
+                  {/* Agent name with icon */}
+                  <div className="flex items-center gap-2 min-w-0">
+                    {agentIconUrl && (
+                      <img
+                        src={agentIconUrl}
+                        alt={agent.agentName}
+                        className="w-7 h-7 rounded-full object-cover shrink-0 bg-[#F8FAFC]"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).style.display = 'none';
+                        }}
+                      />
+                    )}
+                    <span className="text-[#0F172A] text-sm font-medium truncate">{agent.agentName}</span>
+                  </div>
+
+                  {/* Games played */}
+                  <div className="text-center">
+                    <span className="text-[#64748B] text-sm font-mono">{agent.gamesPlayed}</span>
+                  </div>
+
+                  {/* Win rate */}
+                  <div className="text-center">
+                    <span
+                      className={`text-sm font-mono font-medium ${
+                        winRate >= 50 ? 'text-[#059669]' : 'text-[#E11D48]'
+                      }`}
+                    >
+                      {winRate}%
+                    </span>
+                  </div>
+
+                  {/* K/D */}
+                  <div className="text-center">
+                    <span className={`text-sm font-mono ${kd >= 1 ? 'text-[#10B981]' : 'text-[#E11D48]'}`}>
+                      {kd.toFixed(2)}
+                    </span>
+                  </div>
+
+                  {/* ADR */}
+                  <div className="text-center">
+                    <span className="text-[#64748B] text-sm font-mono">{adr.toFixed(0)}</span>
+                  </div>
+
+                  {/* ACS */}
+                  <div className="text-center">
+                    <span className="text-[#64748B] text-sm font-mono">{acs.toFixed(0)}</span>
+                  </div>
+
+                  {/* DDΔ */}
+                  <div className="text-center">
+                    <span className={`text-sm font-mono ${ddDelta >= 0 ? 'text-[#10B981]' : 'text-[#E11D48]'}`}>
+                      {ddDelta >= 0 ? '+' : ''}{ddDelta.toFixed(1)}
+                    </span>
+                  </div>
+
+                  {/* Best Map */}
+                  <div className="text-center">
+                    <span className="text-[#64748B] text-xs">{bestMapName}</span>
+                    {bestMapName !== '-' && (
+                      <span className={`text-xs font-mono ml-1 ${bestMapWinRate >= 50 ? 'text-[#059669]' : 'text-[#E11D48]'}`}>
+                        {bestMapWinRate.toFixed(0)}%
+                      </span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Mobile cards - shown on small screens */}
+        <div className="sm:hidden mt-2">
           {sortedAgents.map((agent) => {
             const winRate = agent.gamesPlayed > 0
               ? Math.round((agent.wins / agent.gamesPlayed) * 100)
@@ -150,7 +262,6 @@ export default function AgentStats({ matches, puuid, playerName, playerTag }: Ag
               ? ((agent.totalDamageDealt - agent.totalDamageReceived) / agent.totalRounds)
               : 0;
 
-            // Best Map calculation
             let bestMapName = '-';
             let bestMapWinRate = 0;
             agent.mapStats.forEach((stats, map) => {
@@ -167,71 +278,48 @@ export default function AgentStats({ matches, puuid, playerName, playerTag }: Ag
             const agentIconUrl = getAgentIconUrl(agent.agentId);
 
             return (
-              <div
-                key={agent.agentName}
-                className="grid grid-cols-[minmax(140px,1.5fr)_60px_60px_65px_60px_60px_65px_110px] gap-2 px-3 py-3 items-center hover:bg-slate-50 transition-colors rounded-lg"
-              >
-                {/* Agent name with icon */}
-                <div className="flex items-center gap-2 min-w-0">
-                  {agentIconUrl && (
-                    <img
-                      src={agentIconUrl}
-                      alt={agent.agentName}
-                      className="w-7 h-7 rounded-full object-cover shrink-0 bg-slate-100"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = 'none';
-                      }}
-                    />
-                  )}
-                  <span className="text-foreground text-sm font-medium truncate">{agent.agentName}</span>
+              <div key={`mobile-${agent.agentName}`} className="p-3 border-b border-[#E2E8F0]/50 last:border-b-0">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    {agentIconUrl && (
+                      <img
+                        src={agentIconUrl}
+                        alt={agent.agentName}
+                        className="w-7 h-7 rounded-full object-cover shrink-0 bg-[#F8FAFC]"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).style.display = 'none';
+                        }}
+                      />
+                    )}
+                    <span className="text-[#0F172A] text-sm font-medium">{agent.agentName}</span>
+                  </div>
+                  <span className="text-[#64748B] text-xs font-mono">{agent.gamesPlayed}試合</span>
                 </div>
-
-                {/* Games played */}
-                <div className="text-center">
-                  <span className="text-slate-600 text-sm">{agent.gamesPlayed}</span>
-                </div>
-
-                {/* Win rate */}
-                <div className="text-center">
+                <div className="flex items-center gap-3 flex-wrap">
                   <span
-                    className={`text-sm font-medium ${
-                      winRate >= 50 ? 'text-emerald-600' : 'text-rose-500'
+                    className={`text-sm font-mono font-medium ${
+                      winRate >= 50 ? 'text-[#059669]' : 'text-[#E11D48]'
                     }`}
                   >
-                    {winRate}%
+                    勝率 {winRate}%
+                  </span>
+                  <span className={`text-sm font-mono ${kd >= 1 ? 'text-[#10B981]' : 'text-[#E11D48]'}`}>
+                    K/D {kd.toFixed(2)}
+                  </span>
+                  <span className="text-[#64748B] text-xs font-mono">
+                    ADR {adr.toFixed(0)}
+                  </span>
+                  <span className="text-[#64748B] text-xs font-mono">
+                    ACS {acs.toFixed(0)}
                   </span>
                 </div>
-
-                {/* K/D */}
-                <div className="text-center">
-                  <span className={`text-sm ${kd >= 1 ? 'text-emerald-600' : 'text-rose-500'}`}>
-                    {kd.toFixed(2)}
+                <div className="flex items-center gap-3 mt-1">
+                  <span className={`text-xs font-mono ${ddDelta >= 0 ? 'text-[#10B981]' : 'text-[#E11D48]'}`}>
+                    {`DD\u0394`} {ddDelta >= 0 ? '+' : ''}{ddDelta.toFixed(1)}
                   </span>
-                </div>
-
-                {/* ADR */}
-                <div className="text-center">
-                  <span className="text-slate-600 text-sm">{adr.toFixed(0)}</span>
-                </div>
-
-                {/* ACS */}
-                <div className="text-center">
-                  <span className="text-slate-600 text-sm">{acs.toFixed(0)}</span>
-                </div>
-
-                {/* DDΔ */}
-                <div className="text-center">
-                  <span className={`text-sm ${ddDelta >= 0 ? 'text-emerald-600' : 'text-rose-500'}`}>
-                    {ddDelta >= 0 ? '+' : ''}{ddDelta.toFixed(1)}
-                  </span>
-                </div>
-
-                {/* Best Map */}
-                <div className="text-center">
-                  <span className="text-slate-600 text-xs">{bestMapName}</span>
                   {bestMapName !== '-' && (
-                    <span className={`text-xs ml-1 ${bestMapWinRate >= 50 ? 'text-emerald-600' : 'text-rose-500'}`}>
-                      {bestMapWinRate.toFixed(0)}%
+                    <span className="text-[#64748B] text-xs">
+                      Best: {bestMapName} <span className={`font-mono ${bestMapWinRate >= 50 ? 'text-[#059669]' : 'text-[#E11D48]'}`}>{bestMapWinRate.toFixed(0)}%</span>
                     </span>
                   )}
                 </div>
@@ -239,91 +327,6 @@ export default function AgentStats({ matches, puuid, playerName, playerTag }: Ag
             );
           })}
         </div>
-      </div>
-
-      {/* Mobile cards - shown on small screens */}
-      <div className="sm:hidden mt-2">
-        {sortedAgents.map((agent) => {
-          const winRate = agent.gamesPlayed > 0
-            ? Math.round((agent.wins / agent.gamesPlayed) * 100)
-            : 0;
-          const kd = agent.deaths > 0
-            ? (agent.kills / agent.deaths)
-            : agent.kills;
-          const adr = agent.totalRounds > 0
-            ? (agent.totalDamageDealt / agent.totalRounds)
-            : 0;
-          const acs = agent.totalRounds > 0
-            ? (agent.totalScore / agent.totalRounds)
-            : 0;
-          const ddDelta = agent.totalRounds > 0
-            ? ((agent.totalDamageDealt - agent.totalDamageReceived) / agent.totalRounds)
-            : 0;
-
-          let bestMapName = '-';
-          let bestMapWinRate = 0;
-          agent.mapStats.forEach((stats, map) => {
-            const total = stats.wins + stats.losses;
-            if (total >= 1) {
-              const wr = (stats.wins / total) * 100;
-              if (wr > bestMapWinRate || (wr === bestMapWinRate && total > 0)) {
-                bestMapWinRate = wr;
-                bestMapName = map;
-              }
-            }
-          });
-
-          const agentIconUrl = getAgentIconUrl(agent.agentId);
-
-          return (
-            <div key={`mobile-${agent.agentName}`} className="p-3 border-b border-border last:border-b-0">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  {agentIconUrl && (
-                    <img
-                      src={agentIconUrl}
-                      alt={agent.agentName}
-                      className="w-7 h-7 rounded-full object-cover shrink-0 bg-slate-100"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = 'none';
-                      }}
-                    />
-                  )}
-                  <span className="text-foreground text-sm font-medium">{agent.agentName}</span>
-                </div>
-                <span className="text-muted-foreground text-xs">{agent.gamesPlayed}試合</span>
-              </div>
-              <div className="flex items-center gap-3 flex-wrap">
-                <span
-                  className={`text-sm font-medium ${
-                    winRate >= 50 ? 'text-emerald-600' : 'text-rose-500'
-                  }`}
-                >
-                  勝率 {winRate}%
-                </span>
-                <span className={`text-sm ${kd >= 1 ? 'text-emerald-600' : 'text-rose-500'}`}>
-                  K/D {kd.toFixed(2)}
-                </span>
-                <span className="text-slate-600 text-xs">
-                  ADR {adr.toFixed(0)}
-                </span>
-                <span className="text-slate-600 text-xs">
-                  ACS {acs.toFixed(0)}
-                </span>
-              </div>
-              <div className="flex items-center gap-3 mt-1">
-                <span className={`text-xs ${ddDelta >= 0 ? 'text-emerald-600' : 'text-rose-500'}`}>
-                  {`DD\u0394`} {ddDelta >= 0 ? '+' : ''}{ddDelta.toFixed(1)}
-                </span>
-                {bestMapName !== '-' && (
-                  <span className="text-muted-foreground text-xs">
-                    Best: {bestMapName} <span className={bestMapWinRate >= 50 ? 'text-emerald-600' : 'text-rose-500'}>{bestMapWinRate.toFixed(0)}%</span>
-                  </span>
-                )}
-              </div>
-            </div>
-          );
-        })}
       </div>
     </div>
   );

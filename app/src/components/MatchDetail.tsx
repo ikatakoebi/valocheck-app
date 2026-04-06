@@ -314,26 +314,26 @@ function TeamTable({
   });
 
   const teamLabel = isWinningTeam ? '勝利' : '敗北';
-  const teamColor = isWinningTeam ? 'text-emerald-600' : 'text-rose-500';
-  const borderColor = isWinningTeam ? 'border-emerald-400' : 'border-rose-400';
+  const teamColor = isWinningTeam ? 'text-[#10B981]' : 'text-[#E11D48]';
+  const borderColor = isWinningTeam ? 'border-[#10B981]' : 'border-[#E11D48]';
 
   return (
-    <div className={`bg-white rounded-xl border border-border overflow-hidden border-t-2 ${borderColor} shadow-sm`}>
+    <div className={`bg-white rounded-xl border border-[#E2E8F0] overflow-hidden border-t-2 ${borderColor} shadow-[0_1px_3px_rgba(0,0,0,0.02),0_1px_2px_rgba(0,0,0,0.04)]`}>
       {/* Team Header */}
-      <div className="px-4 py-3.5 border-b border-border flex items-center justify-between">
+      <div className="px-4 py-3.5 border-b border-[#E2E8F0] flex items-center justify-between">
         <div className="flex items-center gap-3">
           <span className={`font-bold ${teamColor}`}>{teamLabel}</span>
-          <span className="text-muted-foreground text-sm">
+          <span className="text-[#64748B] text-sm">
             {team.team_id === 'Red' ? 'レッド' : team.team_id === 'Blue' ? 'ブルー' : team.team_id}
           </span>
         </div>
-        <span className={`text-lg font-bold ${teamColor}`}>{team.rounds.won}</span>
+        <span className={`text-lg font-mono font-bold ${teamColor}`}>{team.rounds.won}</span>
       </div>
 
       {/* Scrollable table wrapper */}
       <div className="overflow-x-auto">
         {/* Table Header */}
-        <div className={`min-w-[720px] grid ${hasRoundsData ? 'grid-cols-[1fr_80px_60px_55px_50px_55px_55px_50px_35px_35px_35px]' : 'grid-cols-[1fr_80px_60px_55px]'} gap-1 px-4 py-2 border-b border-border/50 text-muted-foreground text-xs uppercase tracking-wider`}>
+        <div className={`min-w-[720px] grid ${hasRoundsData ? 'grid-cols-[1fr_80px_60px_55px_50px_55px_55px_50px_35px_35px_35px]' : 'grid-cols-[1fr_80px_60px_55px]'} gap-1 px-4 py-2 border-b border-[#E2E8F0]/50 text-xs font-medium text-[#64748B] uppercase tracking-wider`}>
           <span>プレイヤー</span>
           <span className="text-center">K/D/A</span>
           <span className="text-center">ACS</span>
@@ -365,8 +365,8 @@ function TeamTable({
           return (
             <div
               key={player.puuid}
-              className={`min-w-[720px] grid ${hasRoundsData ? 'grid-cols-[1fr_80px_60px_55px_50px_55px_55px_50px_35px_35px_35px]' : 'grid-cols-[1fr_80px_60px_55px]'} gap-1 px-4 py-3.5 border-b border-border/30 items-center hover:bg-slate-50 transition-colors ${
-                isHighlighted ? 'bg-indigo-50/50' : ''
+              className={`min-w-[720px] grid ${hasRoundsData ? 'grid-cols-[1fr_80px_60px_55px_50px_55px_55px_50px_35px_35px_35px]' : 'grid-cols-[1fr_80px_60px_55px]'} gap-1 px-4 py-4 border-b border-[#E2E8F0]/50 items-center hover:bg-[#F8FAFC]/50 transition-colors ${
+                isHighlighted ? 'bg-[#F0FDFA]/50' : ''
               }`}
             >
               {/* Player info */}
@@ -375,7 +375,7 @@ function TeamTable({
                   <img
                     src={`https://media.valorant-api.com/agents/${player.agent.id}/displayicon.png`}
                     alt={player.agent?.name || ''}
-                    className="w-8 h-8 rounded-full object-cover shrink-0 bg-slate-100"
+                    className="w-8 h-8 rounded-full object-cover shrink-0 bg-[#F8FAFC]"
                     onError={(e) => {
                       (e.target as HTMLImageElement).style.display = 'none';
                     }}
@@ -390,33 +390,33 @@ function TeamTable({
                 )}
                 <Link
                   href={`/player/${encodeURIComponent(player.name)}/${encodeURIComponent(player.tag)}`}
-                  className="hover:text-indigo-600 transition-colors truncate"
+                  className="hover:text-[#0D9488] transition-colors truncate"
                 >
-                  <span className={`text-sm font-medium ${isHighlighted ? 'text-indigo-600' : 'text-foreground'}`}>
+                  <span className={`text-sm font-medium ${isHighlighted ? 'text-[#0D9488]' : 'text-[#0F172A]'}`}>
                     {player.name}
                   </span>
-                  <span className="text-muted-foreground text-xs ml-1 hidden sm:inline">#{player.tag}</span>
+                  <span className="text-[#64748B] text-xs ml-1 hidden sm:inline">#{player.tag}</span>
                 </Link>
-                <span className="text-muted-foreground/70 text-xs shrink-0 hidden md:inline">{player.agent?.name || '不明'}</span>
+                <span className="text-[#94A3B8] text-xs shrink-0 hidden md:inline">{player.agent?.name || '不明'}</span>
               </div>
 
               {/* K/D/A */}
-              <div className="text-center text-sm">
-                <span className="text-emerald-600">{player.stats.kills}</span>
-                <span className="text-muted-foreground/50">/</span>
-                <span className="text-rose-500">{player.stats.deaths}</span>
-                <span className="text-muted-foreground/50">/</span>
-                <span className="text-slate-600">{player.stats.assists}</span>
+              <div className="text-center text-sm font-mono">
+                <span className="text-[#10B981]">{player.stats.kills}</span>
+                <span className="text-[#94A3B8]">/</span>
+                <span className="text-[#E11D48]">{player.stats.deaths}</span>
+                <span className="text-[#94A3B8]">/</span>
+                <span className="text-[#64748B]">{player.stats.assists}</span>
               </div>
 
               {/* ACS */}
               <div className="text-center">
-                <span className="text-foreground text-sm font-medium">{acs}</span>
+                <span className="text-[#0F172A] text-sm font-mono font-medium">{acs}</span>
               </div>
 
               {/* HS% */}
               <div className="text-center">
-                <span className="text-slate-600 text-sm">{hsRate}%</span>
+                <span className="text-[#64748B] text-sm font-mono">{hsRate}%</span>
               </div>
 
               {/* Extended stats */}
@@ -424,41 +424,41 @@ function TeamTable({
                 <>
                   {/* +/- */}
                   <div className="text-center">
-                    <span className={`text-sm ${ext.plusMinus > 0 ? 'text-emerald-600' : ext.plusMinus < 0 ? 'text-rose-500' : 'text-muted-foreground'}`}>
+                    <span className={`text-sm font-mono ${ext.plusMinus > 0 ? 'text-[#10B981]' : ext.plusMinus < 0 ? 'text-[#E11D48]' : 'text-[#64748B]'}`}>
                       {ext.plusMinus > 0 ? '+' : ''}{ext.plusMinus}
                     </span>
                   </div>
 
                   {/* DDΔ */}
                   <div className="text-center">
-                    <span className={`text-sm ${ext.ddDelta > 0 ? 'text-emerald-600' : ext.ddDelta < 0 ? 'text-rose-500' : 'text-muted-foreground'}`}>
+                    <span className={`text-sm font-mono ${ext.ddDelta > 0 ? 'text-[#10B981]' : ext.ddDelta < 0 ? 'text-[#E11D48]' : 'text-[#64748B]'}`}>
                       {ext.ddDelta > 0 ? '+' : ''}{ext.ddDelta}
                     </span>
                   </div>
 
                   {/* ADR */}
                   <div className="text-center">
-                    <span className="text-slate-600 text-sm">{ext.adr}</span>
+                    <span className="text-[#64748B] text-sm font-mono">{ext.adr}</span>
                   </div>
 
                   {/* KAST */}
                   <div className="text-center">
-                    <span className="text-slate-600 text-sm">{ext.kast}%</span>
+                    <span className="text-[#64748B] text-sm font-mono">{ext.kast}%</span>
                   </div>
 
                   {/* FK */}
                   <div className="text-center">
-                    <span className="text-slate-600 text-sm">{ext.firstKills}</span>
+                    <span className="text-[#64748B] text-sm font-mono">{ext.firstKills}</span>
                   </div>
 
                   {/* FD */}
                   <div className="text-center">
-                    <span className="text-slate-600 text-sm">{ext.firstDeaths}</span>
+                    <span className="text-[#64748B] text-sm font-mono">{ext.firstDeaths}</span>
                   </div>
 
                   {/* MK */}
                   <div className="text-center">
-                    <span className="text-slate-600 text-sm">{ext.multiKills}</span>
+                    <span className="text-[#64748B] text-sm font-mono">{ext.multiKills}</span>
                   </div>
                 </>
               )}
@@ -570,33 +570,36 @@ export default function MatchDetail({ matchId, highlightName, highlightTag }: Ma
   return (
     <div className="flex flex-col gap-6">
       {/* Match Header */}
-      <div className="bg-white rounded-xl p-4 sm:p-6 border border-border shadow-sm">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
-          <div>
-            <h1 className="text-foreground text-lg sm:text-xl font-bold">{mapName}</h1>
-            <div className="flex items-center gap-3 mt-1 flex-wrap">
-              <span className="text-muted-foreground text-sm">{modeName}</span>
-              <span className="text-border">|</span>
-              <span className="text-muted-foreground text-sm">{duration}</span>
-              {avgRankJa && (
-                <>
-                  <span className="text-border">|</span>
-                  <span className="text-muted-foreground text-sm">平均ランク: {avgRankJa}</span>
-                </>
-              )}
+      <div className="bg-white rounded-xl border border-[#E2E8F0] shadow-[0_1px_3px_rgba(0,0,0,0.02),0_1px_2px_rgba(0,0,0,0.04)] overflow-hidden">
+        <div className="w-full h-0.5 bg-[#0D9488]" />
+        <div className="p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+            <div>
+              <h1 className="text-[#0F172A] text-lg sm:text-xl font-bold">{mapName}</h1>
+              <div className="flex items-center gap-3 mt-1 flex-wrap">
+                <span className="text-[#64748B] text-sm">{modeName}</span>
+                <span className="text-[#E2E8F0]">|</span>
+                <span className="text-[#64748B] text-sm font-mono">{duration}</span>
+                {avgRankJa && (
+                  <>
+                    <span className="text-[#E2E8F0]">|</span>
+                    <span className="text-[#64748B] text-sm">平均ランク: {avgRankJa}</span>
+                  </>
+                )}
+              </div>
             </div>
-          </div>
-          <div className="flex flex-col items-start sm:items-end">
-            <div className="flex items-center gap-3">
-              <span className={`text-2xl sm:text-3xl font-black ${myTeam?.won ? 'text-emerald-600' : 'text-rose-500'}`}>
-                {myTeam?.rounds?.won ?? 0}
-              </span>
-              <span className="text-muted-foreground text-lg sm:text-xl">-</span>
-              <span className={`text-2xl sm:text-3xl font-black ${enemyTeam?.won ? 'text-emerald-600' : 'text-rose-500'}`}>
-                {enemyTeam?.rounds?.won ?? 0}
-              </span>
+            <div className="flex flex-col items-start sm:items-end">
+              <div className="flex items-center gap-3">
+                <span className={`text-2xl sm:text-3xl font-mono font-black ${myTeam?.won ? 'text-[#10B981]' : 'text-[#E11D48]'}`}>
+                  {myTeam?.rounds?.won ?? 0}
+                </span>
+                <span className="text-[#64748B] text-lg sm:text-xl">-</span>
+                <span className={`text-2xl sm:text-3xl font-mono font-black ${enemyTeam?.won ? 'text-[#10B981]' : 'text-[#E11D48]'}`}>
+                  {enemyTeam?.rounds?.won ?? 0}
+                </span>
+              </div>
+              <span className="text-[#94A3B8] text-xs mt-1">{dateStr}</span>
             </div>
-            <span className="text-muted-foreground text-xs mt-1">{dateStr}</span>
           </div>
         </div>
       </div>
@@ -611,7 +614,7 @@ export default function MatchDetail({ matchId, highlightName, highlightTag }: Ma
       )}
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-white rounded-xl p-1 border border-border overflow-x-auto shadow-sm">
+      <div className="flex gap-1 bg-white rounded-xl p-1 border border-[#E2E8F0] overflow-x-auto shadow-[0_1px_3px_rgba(0,0,0,0.02),0_1px_2px_rgba(0,0,0,0.04)]">
         {tabs.map((tab) => (
           <button
             key={tab.key}
@@ -619,10 +622,10 @@ export default function MatchDetail({ matchId, highlightName, highlightTag }: Ma
             disabled={tab.disabled}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
               activeTab === tab.key
-                ? 'bg-indigo-600 text-white'
+                ? 'bg-[#0D9488] text-white'
                 : tab.disabled
-                ? 'text-muted-foreground/40 cursor-not-allowed'
-                : 'text-muted-foreground hover:text-foreground hover:bg-slate-50'
+                ? 'text-[#94A3B8] cursor-not-allowed'
+                : 'text-[#64748B] hover:text-[#0F172A] hover:bg-[#F8FAFC]'
             }`}
           >
             {tab.label}

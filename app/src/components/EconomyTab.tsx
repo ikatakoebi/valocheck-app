@@ -71,10 +71,10 @@ function BarChart({
                 />
               </div>
               {/* Tooltip */}
-              <div className="hidden group-hover:block absolute bottom-full mb-1 bg-white border border-border rounded-lg px-2 py-1 text-[10px] text-foreground whitespace-nowrap z-10 shadow-md">
-                <div>R{d.roundNum}</div>
-                <div>装備: {d.avgLoadout.toLocaleString()}</div>
-                <div>残金: {d.avgBank.toLocaleString()}</div>
+              <div className="hidden group-hover:block absolute bottom-full mb-1 bg-white border border-[#E2E8F0] rounded-lg px-2 py-1 text-[10px] text-[#0F172A] whitespace-nowrap z-10 shadow-md">
+                <div className="font-mono">R{d.roundNum}</div>
+                <div className="font-mono">装備: {d.avgLoadout.toLocaleString()}</div>
+                <div className="font-mono">残金: {d.avgBank.toLocaleString()}</div>
               </div>
             </div>
           );
@@ -83,7 +83,7 @@ function BarChart({
       {/* Round numbers */}
       <div className="flex gap-px">
         {data.map((d) => (
-          <div key={d.roundNum} className="flex-1 text-center text-[9px] text-muted-foreground/50">
+          <div key={d.roundNum} className="flex-1 text-center text-[9px] text-[#94A3B8] font-mono">
             {d.roundNum}
           </div>
         ))}
@@ -114,57 +114,57 @@ export default function EconomyTab({ rounds, myTeamId, enemyTeamId }: EconomyTab
     <div className="flex flex-col gap-6">
       {/* Summary cards */}
       <div className="grid grid-cols-2 gap-4">
-        <div className="bg-white rounded-xl p-4 border border-border shadow-sm">
-          <div className="text-emerald-600 text-xs font-medium mb-1">味方チーム 平均装備価値</div>
-          <div className="text-foreground text-xl font-bold">{myAvgLoadout.toLocaleString()}</div>
+        <div className="bg-white rounded-xl p-4 border border-[#E2E8F0] shadow-[0_1px_3px_rgba(0,0,0,0.02),0_1px_2px_rgba(0,0,0,0.04)]">
+          <div className="text-[#10B981] text-xs font-medium mb-1">味方チーム 平均装備価値</div>
+          <div className="text-[#0F172A] text-xl font-mono font-bold">{myAvgLoadout.toLocaleString()}</div>
         </div>
-        <div className="bg-white rounded-xl p-4 border border-border shadow-sm">
-          <div className="text-rose-500 text-xs font-medium mb-1">敵チーム 平均装備価値</div>
-          <div className="text-foreground text-xl font-bold">{enemyAvgLoadout.toLocaleString()}</div>
+        <div className="bg-white rounded-xl p-4 border border-[#E2E8F0] shadow-[0_1px_3px_rgba(0,0,0,0.02),0_1px_2px_rgba(0,0,0,0.04)]">
+          <div className="text-[#E11D48] text-xs font-medium mb-1">敵チーム 平均装備価値</div>
+          <div className="text-[#0F172A] text-xl font-mono font-bold">{enemyAvgLoadout.toLocaleString()}</div>
         </div>
       </div>
 
       {/* Charts */}
-      <div className="bg-white rounded-xl p-4 border border-border shadow-sm">
-        <h3 className="text-foreground text-sm font-bold mb-4">ラウンド別エコノミー推移</h3>
+      <div className="bg-white rounded-xl p-4 border border-[#E2E8F0] shadow-[0_1px_3px_rgba(0,0,0,0.02),0_1px_2px_rgba(0,0,0,0.04)]">
+        <h3 className="text-[#0F172A] text-sm font-bold mb-4">ラウンド別エコノミー推移</h3>
         <div className="flex flex-col gap-6">
           <BarChart
             data={myEconomy}
             maxValue={maxValue}
             label="味方チーム（装備価値 / 残金）"
-            colorClass="text-emerald-600"
-            bgClass="bg-emerald-500"
+            colorClass="text-[#10B981]"
+            bgClass="bg-[#10B981]"
           />
           <BarChart
             data={enemyEconomy}
             maxValue={maxValue}
             label="敵チーム（装備価値 / 残金）"
-            colorClass="text-rose-500"
-            bgClass="bg-rose-400"
+            colorClass="text-[#E11D48]"
+            bgClass="bg-[#E11D48]"
           />
         </div>
         {/* Legend */}
-        <div className="flex items-center gap-4 mt-3 text-xs text-muted-foreground">
+        <div className="flex items-center gap-4 mt-3 text-xs text-[#64748B]">
           <span className="flex items-center gap-1">
-            <span className="w-3 h-3 rounded-sm bg-emerald-500 inline-block" /> /
-            <span className="w-3 h-3 rounded-sm bg-rose-400 inline-block" /> 装備価値
+            <span className="w-3 h-3 rounded-sm bg-[#10B981] inline-block" /> /
+            <span className="w-3 h-3 rounded-sm bg-[#E11D48] inline-block" /> 装備価値
           </span>
           <span className="flex items-center gap-1">
-            <span className="w-3 h-3 rounded-sm bg-emerald-500 opacity-40 inline-block" /> /
-            <span className="w-3 h-3 rounded-sm bg-rose-400 opacity-40 inline-block" /> 残金
+            <span className="w-3 h-3 rounded-sm bg-[#10B981] opacity-40 inline-block" /> /
+            <span className="w-3 h-3 rounded-sm bg-[#E11D48] opacity-40 inline-block" /> 残金
           </span>
         </div>
       </div>
 
       {/* Per-round detail table */}
-      <div className="bg-white rounded-xl border border-border overflow-hidden shadow-sm">
-        <div className="px-4 py-3 border-b border-border">
-          <span className="text-foreground text-sm font-bold">ラウンド別詳細</span>
+      <div className="bg-white rounded-xl border border-[#E2E8F0] overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.02),0_1px_2px_rgba(0,0,0,0.04)]">
+        <div className="px-4 py-3 border-b border-[#E2E8F0]">
+          <span className="text-[#0F172A] text-sm font-bold">ラウンド別詳細</span>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-border/50 text-muted-foreground text-xs uppercase">
+              <tr className="border-b border-[#E2E8F0]/50 text-xs font-medium text-[#64748B] uppercase tracking-wider">
                 <th className="px-3 py-2 text-left">R</th>
                 <th className="px-3 py-2 text-right">味方 装備</th>
                 <th className="px-3 py-2 text-right">味方 残金</th>
@@ -178,13 +178,13 @@ export default function EconomyTab({ rounds, myTeamId, enemyTeamId }: EconomyTab
                 const enemy = enemyEconomy[idx];
                 const diff = my.avgLoadout - (enemy?.avgLoadout || 0);
                 return (
-                  <tr key={idx} className="border-b border-border/20 hover:bg-slate-50/50">
-                    <td className="px-3 py-1.5 text-muted-foreground">{my.roundNum}</td>
-                    <td className="px-3 py-1.5 text-right text-emerald-600">{my.avgLoadout.toLocaleString()}</td>
-                    <td className="px-3 py-1.5 text-right text-emerald-600/50">{my.avgBank.toLocaleString()}</td>
-                    <td className="px-3 py-1.5 text-right text-rose-500">{enemy?.avgLoadout.toLocaleString() || '-'}</td>
-                    <td className="px-3 py-1.5 text-right text-rose-500/50">{enemy?.avgBank.toLocaleString() || '-'}</td>
-                    <td className={`px-3 py-1.5 text-center ${diff > 0 ? 'text-emerald-600' : diff < 0 ? 'text-rose-500' : 'text-muted-foreground'}`}>
+                  <tr key={idx} className="border-b border-[#E2E8F0]/20 hover:bg-[#F8FAFC]/50">
+                    <td className="px-3 py-1.5 text-[#64748B] font-mono">{my.roundNum}</td>
+                    <td className="px-3 py-1.5 text-right text-[#10B981] font-mono">{my.avgLoadout.toLocaleString()}</td>
+                    <td className="px-3 py-1.5 text-right text-[#10B981]/50 font-mono">{my.avgBank.toLocaleString()}</td>
+                    <td className="px-3 py-1.5 text-right text-[#E11D48] font-mono">{enemy?.avgLoadout.toLocaleString() || '-'}</td>
+                    <td className="px-3 py-1.5 text-right text-[#E11D48]/50 font-mono">{enemy?.avgBank.toLocaleString() || '-'}</td>
+                    <td className={`px-3 py-1.5 text-center font-mono ${diff > 0 ? 'text-[#10B981]' : diff < 0 ? 'text-[#E11D48]' : 'text-[#64748B]'}`}>
                       {diff > 0 ? '+' : ''}{diff.toLocaleString()}
                     </td>
                   </tr>

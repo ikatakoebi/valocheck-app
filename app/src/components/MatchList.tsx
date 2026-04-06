@@ -269,11 +269,14 @@ export default function MatchList({
 }: MatchListProps) {
   if (!matches || matches.length === 0) {
     return (
-      <div className="bg-white rounded-xl p-4 sm:p-6 border border-border shadow-sm">
-        <h2 className="text-foreground text-sm font-semibold uppercase tracking-wider mb-3 sm:mb-4">
-          マッチ履歴
-        </h2>
-        <p className="text-muted-foreground text-center py-8 text-sm">マッチ履歴がありません</p>
+      <div className="bg-white rounded-xl border border-[#E2E8F0] shadow-[0_1px_3px_rgba(0,0,0,0.02),0_1px_2px_rgba(0,0,0,0.04)] overflow-hidden">
+        <div className="w-full h-0.5 bg-[#64748B]" />
+        <div className="p-4 sm:p-6">
+          <h2 className="text-xs font-medium text-[#64748B] uppercase tracking-wider mb-3 sm:mb-4">
+            マッチ履歴
+          </h2>
+          <p className="text-[#64748B] text-center py-8 text-sm">マッチ履歴がありません</p>
+        </div>
       </div>
     );
   }
@@ -282,187 +285,197 @@ export default function MatchList({
   const dayGroups = groupByDay(processedMatches);
 
   return (
-    <div className="bg-white rounded-xl p-4 sm:p-6 border border-border shadow-sm">
-      <h2 className="text-foreground text-sm font-semibold uppercase tracking-wider mb-3 sm:mb-4">
-        マッチ履歴
-      </h2>
+    <div className="bg-white rounded-xl border border-[#E2E8F0] shadow-[0_1px_3px_rgba(0,0,0,0.02),0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-1px_rgba(0,0,0,0.03)] transition-shadow duration-200 overflow-hidden">
+      <div className="w-full h-0.5 bg-[#64748B]" />
+      <div className="p-4 sm:p-6">
+        <h2 className="text-xs font-medium text-[#64748B] uppercase tracking-wider mb-3 sm:mb-4">
+          マッチ履歴
+        </h2>
 
-      <div className="flex flex-col gap-6">
-        {dayGroups.map((group) => {
-          const kd = group.summary.totalDeaths > 0
-            ? (group.summary.totalKills / group.summary.totalDeaths)
-            : group.summary.totalKills;
+        <div className="flex flex-col gap-6">
+          {dayGroups.map((group) => {
+            const kd = group.summary.totalDeaths > 0
+              ? (group.summary.totalKills / group.summary.totalDeaths)
+              : group.summary.totalKills;
 
-          return (
-            <div key={group.dateKey}>
-              {/* Day header with summary */}
-              <div className="flex items-center justify-between mb-2.5 px-1">
-                <span className="text-foreground text-sm font-semibold">{group.dateLabel}</span>
-                <div className="flex items-center gap-3 text-xs">
-                  <span className={`font-medium ${group.summary.wins >= group.summary.losses ? 'text-emerald-600' : 'text-rose-500'}`}>
-                    {group.summary.wins}W-{group.summary.losses}L
-                  </span>
-                  <span className={`${kd >= 1 ? 'text-emerald-600' : 'text-rose-500'}`}>
-                    K/D {kd.toFixed(2)}
-                  </span>
-                  <span className="text-muted-foreground">
-                    HS {group.summary.hsPercent.toFixed(0)}%
-                  </span>
-                  <span className="text-muted-foreground hidden sm:inline">
-                    ACS {group.summary.avgAcs.toFixed(0)}
-                  </span>
+            return (
+              <div key={group.dateKey}>
+                {/* Day header with summary */}
+                <div className="flex items-center justify-between mb-2.5 px-1">
+                  <span className="text-[#0F172A] text-sm font-semibold">{group.dateLabel}</span>
+                  <div className="flex items-center gap-3 text-xs font-mono">
+                    <span className={`font-medium ${group.summary.wins >= group.summary.losses ? 'text-[#10B981]' : 'text-[#E11D48]'}`}>
+                      {group.summary.wins}W-{group.summary.losses}L
+                    </span>
+                    <span className={`${kd >= 1 ? 'text-[#10B981]' : 'text-[#E11D48]'}`}>
+                      K/D {kd.toFixed(2)}
+                    </span>
+                    <span className="text-[#64748B]">
+                      HS {group.summary.hsPercent.toFixed(0)}%
+                    </span>
+                    <span className="text-[#64748B] hidden sm:inline">
+                      ACS {group.summary.avgAcs.toFixed(0)}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Matches in this day */}
+                <div className="flex flex-col gap-1.5">
+                  {group.matches.map((pm) => {
+                    const { match, player, isWin, teamRoundsWon, opponentRoundsWon } = pm;
+                    const agentName = player.agent?.name ?? '不明';
+                    const agentIconUrl = getAgentIconUrl(player.agent?.id);
+                    const mapName = match.metadata.map?.name ?? '不明';
+                    const elapsed = formatElapsedTime(match.metadata.started_at);
+                    const rankIconUrl = player.tier?.id ? getRankIconUrl(player.tier.id) : '';
+                    const { kills, deaths, assists } = player.stats;
+
+                    return (
+                      <button
+                        type="button"
+                        key={match.metadata.match_id}
+                        onClick={() => onMatchClick?.(match.metadata.match_id)}
+                        className={`flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-3 rounded-lg border transition-all hover:shadow-sm cursor-pointer text-left w-full ${
+                          isWin
+                            ? 'border-[#DCFCE7] bg-[#F0FDF4]/30'
+                            : 'border-[#E2E8F0] bg-white'
+                        }`}
+                      >
+                        {/* Accent bar */}
+                        <div className={`w-1.5 h-10 rounded-full shrink-0 ${
+                          isWin ? 'bg-[#10B981]' : 'bg-[#E11D48] opacity-60'
+                        }`} />
+
+                        {/* Win/Loss badge + Rank indicator */}
+                        <div className="flex flex-col items-center gap-0.5 w-8 shrink-0">
+                          <span
+                            className={`text-xs font-bold px-1.5 py-0.5 rounded ${
+                              isWin
+                                ? 'bg-[#DCFCE7] text-[#064E3B]'
+                                : 'bg-rose-50 text-[#E11D48] border border-rose-100'
+                            }`}
+                          >
+                            {isWin ? 'W' : 'L'}
+                          </span>
+                          {rankIconUrl && (
+                            <img
+                              src={rankIconUrl}
+                              alt=""
+                              className="w-4 h-4 object-contain"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).style.display = 'none';
+                              }}
+                            />
+                          )}
+                        </div>
+
+                        {/* Agent icon + name */}
+                        <div className="flex items-center gap-1.5 w-24 sm:w-28 shrink-0 min-w-0">
+                          {agentIconUrl && (
+                            <img
+                              src={agentIconUrl}
+                              alt={agentName}
+                              className="w-7 h-7 rounded-full object-cover shrink-0 bg-[#F8FAFC]"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).style.display = 'none';
+                              }}
+                            />
+                          )}
+                          <span className="text-[#0F172A] text-sm font-medium truncate">{agentName}</span>
+                        </div>
+
+                        {/* Map */}
+                        <div className="w-16 sm:w-20 shrink-0 hidden sm:block">
+                          <span className="text-[#64748B] text-sm truncate block">{mapName}</span>
+                        </div>
+
+                        {/* Score */}
+                        <div className="w-12 sm:w-14 shrink-0 text-center">
+                          <span
+                            className={`text-sm font-mono font-semibold ${
+                              isWin ? 'text-[#10B981]' : 'text-[#E11D48]'
+                            }`}
+                          >
+                            {teamRoundsWon}-{opponentRoundsWon}
+                          </span>
+                        </div>
+
+                        {/* K/D/A */}
+                        <div className="w-16 sm:w-20 shrink-0">
+                          <span className="text-sm font-mono">
+                            <span className="text-[#10B981]">{kills}</span>
+                            <span className="text-[#94A3B8]">/</span>
+                            <span className="text-[#E11D48]">{deaths}</span>
+                            <span className="text-[#94A3B8]">/</span>
+                            <span className="text-[#64748B]">{assists}</span>
+                          </span>
+                        </div>
+
+                        {/* Additional stats: ACS, HS%, DDdelta */}
+                        <div className="hidden sm:flex items-center gap-2.5 text-xs flex-1 min-w-0">
+                          <span className="text-[#64748B]">
+                            ACS <span className="text-[#0F172A] font-mono font-medium">{pm.acs.toFixed(0)}</span>
+                          </span>
+                          <span className="text-[#64748B]">
+                            HS <span className="text-[#0F172A] font-mono font-medium">{pm.hsPercent.toFixed(0)}%</span>
+                          </span>
+                          <span className={`font-mono ${pm.ddDelta >= 0 ? 'text-[#10B981]' : 'text-[#E11D48]'}`}>
+                            {`DD\u0394`} {pm.ddDelta >= 0 ? '+' : ''}{pm.ddDelta.toFixed(0)}
+                          </span>
+                        </div>
+
+                        {/* Ranking */}
+                        <div className="shrink-0">
+                          <span
+                            className={`text-xs font-semibold px-1.5 py-0.5 rounded-md ${
+                              pm.ranking === 1
+                                ? 'bg-amber-100 text-amber-700'
+                                : pm.ranking <= 3
+                                ? 'bg-[#F8FAFC] text-[#64748B]'
+                                : 'bg-[#F8FAFC] text-[#94A3B8]'
+                            }`}
+                          >
+                            {pm.rankLabel}
+                          </span>
+                        </div>
+
+                        {/* Elapsed time */}
+                        <div className="shrink-0 hidden sm:block w-14 text-right">
+                          <span className="text-[#94A3B8] text-xs">{elapsed}</span>
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
-
-              {/* Matches in this day */}
-              <div className="flex flex-col gap-1.5">
-                {group.matches.map((pm) => {
-                  const { match, player, isWin, teamRoundsWon, opponentRoundsWon } = pm;
-                  const agentName = player.agent?.name ?? '不明';
-                  const agentIconUrl = getAgentIconUrl(player.agent?.id);
-                  const mapName = match.metadata.map?.name ?? '不明';
-                  const elapsed = formatElapsedTime(match.metadata.started_at);
-                  const rankIconUrl = player.tier?.id ? getRankIconUrl(player.tier.id) : '';
-                  const { kills, deaths, assists } = player.stats;
-
-                  return (
-                    <button
-                      type="button"
-                      key={match.metadata.match_id}
-                      onClick={() => onMatchClick?.(match.metadata.match_id)}
-                      className={`flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-3 rounded-xl border transition-all hover:shadow-sm cursor-pointer text-left w-full ${
-                        isWin
-                          ? 'border-l-4 border-l-emerald-500 border-t-border border-r-border border-b-border bg-emerald-50/50 hover:bg-emerald-50'
-                          : 'border-l-4 border-l-rose-400 border-t-border border-r-border border-b-border bg-rose-50/50 hover:bg-rose-50'
-                      }`}
-                    >
-                      {/* Win/Loss + Rank indicator */}
-                      <div className="flex flex-col items-center gap-0.5 w-6 shrink-0">
-                        <span
-                          className={`text-xs font-bold ${
-                            isWin ? 'text-emerald-600' : 'text-rose-500'
-                          }`}
-                        >
-                          {isWin ? 'W' : 'L'}
-                        </span>
-                        {rankIconUrl && (
-                          <img
-                            src={rankIconUrl}
-                            alt=""
-                            className="w-4 h-4 object-contain"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).style.display = 'none';
-                            }}
-                          />
-                        )}
-                      </div>
-
-                      {/* Agent icon + name */}
-                      <div className="flex items-center gap-1.5 w-24 sm:w-28 shrink-0 min-w-0">
-                        {agentIconUrl && (
-                          <img
-                            src={agentIconUrl}
-                            alt={agentName}
-                            className="w-7 h-7 rounded-full object-cover shrink-0 bg-slate-100"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).style.display = 'none';
-                            }}
-                          />
-                        )}
-                        <span className="text-foreground text-sm font-medium truncate">{agentName}</span>
-                      </div>
-
-                      {/* Map */}
-                      <div className="w-16 sm:w-20 shrink-0 hidden sm:block">
-                        <span className="text-foreground/70 text-sm truncate block">{mapName}</span>
-                      </div>
-
-                      {/* Score */}
-                      <div className="w-12 sm:w-14 shrink-0 text-center">
-                        <span
-                          className={`text-sm font-semibold ${
-                            isWin ? 'text-emerald-600' : 'text-rose-500'
-                          }`}
-                        >
-                          {teamRoundsWon}-{opponentRoundsWon}
-                        </span>
-                      </div>
-
-                      {/* K/D/A */}
-                      <div className="w-16 sm:w-20 shrink-0">
-                        <span className="text-sm">
-                          <span className="text-emerald-600">{kills}</span>
-                          <span className="text-muted-foreground/50">/</span>
-                          <span className="text-rose-500">{deaths}</span>
-                          <span className="text-muted-foreground/50">/</span>
-                          <span className="text-slate-600">{assists}</span>
-                        </span>
-                      </div>
-
-                      {/* Additional stats: ACS, HS%, DDdelta */}
-                      <div className="hidden sm:flex items-center gap-2.5 text-xs flex-1 min-w-0">
-                        <span className="text-muted-foreground">
-                          ACS <span className="text-foreground font-medium">{pm.acs.toFixed(0)}</span>
-                        </span>
-                        <span className="text-muted-foreground">
-                          HS <span className="text-foreground font-medium">{pm.hsPercent.toFixed(0)}%</span>
-                        </span>
-                        <span className={`${pm.ddDelta >= 0 ? 'text-emerald-600' : 'text-rose-500'}`}>
-                          {`DD\u0394`} {pm.ddDelta >= 0 ? '+' : ''}{pm.ddDelta.toFixed(0)}
-                        </span>
-                      </div>
-
-                      {/* Ranking */}
-                      <div className="shrink-0">
-                        <span
-                          className={`text-xs font-semibold px-1.5 py-0.5 rounded-md ${
-                            pm.ranking === 1
-                              ? 'bg-amber-100 text-amber-700'
-                              : pm.ranking <= 3
-                              ? 'bg-slate-100 text-slate-600'
-                              : 'bg-slate-50 text-muted-foreground'
-                          }`}
-                        >
-                          {pm.rankLabel}
-                        </span>
-                      </div>
-
-                      {/* Elapsed time */}
-                      <div className="shrink-0 hidden sm:block w-14 text-right">
-                        <span className="text-muted-foreground/70 text-xs">{elapsed}</span>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Load More Button */}
-      {hasMore && onLoadMore && (
-        <div className="mt-6 flex justify-center">
-          <button
-            type="button"
-            onClick={onLoadMore}
-            disabled={loadingMore}
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loadingMore ? (
-              <>
-                <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                </svg>
-                <span>読み込み中...</span>
-              </>
-            ) : (
-              <span>もっと読み込む</span>
-            )}
-          </button>
+            );
+          })}
         </div>
-      )}
+
+        {/* Load More Button */}
+        {hasMore && onLoadMore && (
+          <div className="mt-6 flex justify-center">
+            <button
+              type="button"
+              onClick={onLoadMore}
+              disabled={loadingMore}
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-[#0D9488] text-white text-sm font-medium hover:bg-[#0F766E] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loadingMore ? (
+                <>
+                  <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                  <span>読み込み中...</span>
+                </>
+              ) : (
+                <span>もっと読み込む</span>
+              )}
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

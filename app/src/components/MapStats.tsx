@@ -67,50 +67,53 @@ export default function MapStats({ matches, puuid, playerName, playerTag }: MapS
   }
 
   return (
-    <div className="bg-white rounded-xl p-4 sm:p-6 border border-border shadow-sm">
-      <h2 className="text-foreground text-sm font-semibold uppercase tracking-wider mb-3 sm:mb-4">
-        マップ統計
-      </h2>
-      <div className="flex flex-col gap-3">
-        {sortedMaps.map((mapStat) => {
-          const winRate = mapStat.gamesPlayed > 0
-            ? Math.round((mapStat.wins / mapStat.gamesPlayed) * 100)
-            : 0;
+    <div className="bg-white rounded-xl border border-[#E2E8F0] shadow-[0_1px_3px_rgba(0,0,0,0.02),0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-1px_rgba(0,0,0,0.03)] transition-shadow duration-200 overflow-hidden">
+      <div className="w-full h-0.5 bg-[#64748B]" />
+      <div className="p-4 sm:p-6">
+        <h2 className="text-xs font-medium text-[#64748B] uppercase tracking-wider mb-3 sm:mb-4">
+          マップ統計
+        </h2>
+        <div className="flex flex-col gap-3">
+          {sortedMaps.map((mapStat) => {
+            const winRate = mapStat.gamesPlayed > 0
+              ? Math.round((mapStat.wins / mapStat.gamesPlayed) * 100)
+              : 0;
 
-          return (
-            <div key={mapStat.mapName} className="px-3 py-3 rounded-xl hover:bg-slate-50 transition-colors">
-              {/* Map info row */}
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-3">
-                  <span className="text-foreground text-sm font-medium">{mapStat.mapName}</span>
-                  <span className="text-muted-foreground/70 text-xs">{mapStat.gamesPlayed}試合</span>
+            return (
+              <div key={mapStat.mapName} className="px-3 py-4 border-b border-[#E2E8F0]/50 last:border-b-0 hover:bg-[#F8FAFC]/50 transition-colors">
+                {/* Map info row */}
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-3">
+                    <span className="text-[#0F172A] text-sm font-medium">{mapStat.mapName}</span>
+                    <span className="text-[#94A3B8] text-xs font-mono">{mapStat.gamesPlayed}試合</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[#64748B] text-xs font-mono">
+                      {mapStat.wins}勝 {mapStat.gamesPlayed - mapStat.wins}敗
+                    </span>
+                    <span
+                      className={`text-sm font-mono font-bold ${
+                        winRate >= 50 ? 'text-[#059669]' : 'text-[#E11D48]'
+                      }`}
+                    >
+                      {winRate}%
+                    </span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-muted-foreground text-xs">
-                    {mapStat.wins}勝 {mapStat.gamesPlayed - mapStat.wins}敗
-                  </span>
-                  <span
-                    className={`text-sm font-bold ${
-                      winRate >= 50 ? 'text-emerald-600' : 'text-rose-500'
+
+                {/* Win rate bar */}
+                <div className="w-full h-2 bg-[#F8FAFC] rounded-full overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all ${
+                      winRate >= 50 ? 'bg-[#10B981]' : 'bg-[#E11D48]'
                     }`}
-                  >
-                    {winRate}%
-                  </span>
+                    style={{ width: `${winRate}%` }}
+                  />
                 </div>
               </div>
-
-              {/* Win rate bar */}
-              <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-                <div
-                  className={`h-full rounded-full transition-all ${
-                    winRate >= 50 ? 'bg-emerald-500' : 'bg-rose-400'
-                  }`}
-                  style={{ width: `${winRate}%` }}
-                />
-              </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
   );

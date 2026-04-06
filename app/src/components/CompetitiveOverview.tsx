@@ -87,12 +87,23 @@ function aggregateStats(
   return stats;
 }
 
+const STAT_COLORS: Record<string, string> = {
+  'K/D Ratio': 'bg-[#10B981]',
+  'Win%': 'bg-[#0D9488]',
+  'Headshot%': 'bg-[#D97706]',
+  'Damage/R': 'bg-[#64748B]',
+};
+
 function StatCard({ label, value, subLabel }: { label: string; value: string; subLabel?: string }) {
+  const lineColor = STAT_COLORS[label] || 'bg-[#64748B]';
   return (
-    <div className="bg-slate-50 rounded-xl p-3 sm:p-4 border border-border flex flex-col items-center justify-center min-w-0">
-      <span className="text-muted-foreground text-xs uppercase tracking-wider mb-1 text-center whitespace-nowrap">{label}</span>
-      <span className="text-foreground text-lg sm:text-2xl font-bold">{value}</span>
-      {subLabel && <span className="text-muted-foreground text-xs mt-0.5">{subLabel}</span>}
+    <div className="bg-white rounded-xl border border-[#E2E8F0] shadow-[0_1px_3px_rgba(0,0,0,0.02),0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-1px_rgba(0,0,0,0.03)] transition-shadow duration-200 flex flex-col items-center justify-center min-w-0 overflow-hidden">
+      <div className={`w-full h-0.5 ${lineColor}`} />
+      <div className="p-3 sm:p-4 flex flex-col items-center justify-center">
+        <span className="text-sm font-medium text-[#64748B] mb-1 text-center whitespace-nowrap">{label}</span>
+        <span className="text-3xl font-mono font-bold tracking-tight text-[#0F172A]">{value}</span>
+        {subLabel && <span className="text-[#64748B] text-xs mt-0.5 font-mono">{subLabel}</span>}
+      </div>
     </div>
   );
 }
@@ -117,71 +128,74 @@ export default function CompetitiveOverview({ matches, puuid, playerName, player
   const ddDeltaPerRound = stats.totalRounds > 0 ? ((stats.totalDamageDealt - stats.totalDamageReceived) / stats.totalRounds) : 0;
 
   return (
-    <div className="bg-white rounded-xl p-4 sm:p-6 border border-border shadow-sm">
-      <h2 className="text-foreground text-sm font-semibold uppercase tracking-wider mb-4">
-        Competitive Overview
-      </h2>
+    <div className="bg-white rounded-xl border border-[#E2E8F0] shadow-[0_1px_3px_rgba(0,0,0,0.02),0_1px_2px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-1px_rgba(0,0,0,0.03)] transition-shadow duration-200 overflow-hidden">
+      <div className="w-full h-0.5 bg-[#0D9488]" />
+      <div className="p-4 sm:p-6">
+        <h2 className="text-[#0F172A] text-sm font-semibold uppercase tracking-wider mb-4">
+          Competitive Overview
+        </h2>
 
-      {/* Primary stat cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-4">
-        <StatCard
-          label="Damage/R"
-          value={damagePerRound.toFixed(1)}
-        />
-        <StatCard
-          label="K/D Ratio"
-          value={kdRatio.toFixed(2)}
-        />
-        <StatCard
-          label="Headshot%"
-          value={`${headshotPct.toFixed(1)}%`}
-        />
-        <StatCard
-          label="Win%"
-          value={`${winPct.toFixed(0)}%`}
-          subLabel={`${stats.wins}W ${stats.totalMatches - stats.wins}L`}
-        />
-      </div>
+        {/* Primary stat cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-4">
+          <StatCard
+            label="Damage/R"
+            value={damagePerRound.toFixed(1)}
+          />
+          <StatCard
+            label="K/D Ratio"
+            value={kdRatio.toFixed(2)}
+          />
+          <StatCard
+            label="Headshot%"
+            value={`${headshotPct.toFixed(1)}%`}
+          />
+          <StatCard
+            label="Win%"
+            value={`${winPct.toFixed(0)}%`}
+            subLabel={`${stats.wins}W ${stats.totalMatches - stats.wins}L`}
+          />
+        </div>
 
-      {/* Secondary stats grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-4">
-        <div className="flex flex-col">
-          <span className="text-muted-foreground text-xs uppercase tracking-wider">ACS</span>
-          <span className="text-foreground text-lg font-semibold">{acs.toFixed(1)}</span>
+        {/* Secondary stats grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-4">
+          <div className="flex flex-col">
+            <span className="text-[#64748B] text-xs font-medium uppercase tracking-wider">ACS</span>
+            <span className="text-[#0F172A] text-lg font-mono font-semibold">{acs.toFixed(1)}</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[#64748B] text-xs font-medium uppercase tracking-wider">KAD Ratio</span>
+            <span className="text-[#0F172A] text-lg font-mono font-semibold">{kadRatio.toFixed(2)}</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[#64748B] text-xs font-medium uppercase tracking-wider">Kills/R</span>
+            <span className="text-[#0F172A] text-lg font-mono font-semibold">{killsPerRound.toFixed(2)}</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[#64748B] text-xs font-medium uppercase tracking-wider">{`DD\u0394/R`}</span>
+            <span className={`text-lg font-mono font-semibold ${ddDeltaPerRound >= 0 ? 'text-[#10B981]' : 'text-[#E11D48]'}`}>
+              {ddDeltaPerRound >= 0 ? '+' : ''}{ddDeltaPerRound.toFixed(1)}
+            </span>
+          </div>
         </div>
-        <div className="flex flex-col">
-          <span className="text-muted-foreground text-xs uppercase tracking-wider">KAD Ratio</span>
-          <span className="text-foreground text-lg font-semibold">{kadRatio.toFixed(2)}</span>
-        </div>
-        <div className="flex flex-col">
-          <span className="text-muted-foreground text-xs uppercase tracking-wider">Kills/R</span>
-          <span className="text-foreground text-lg font-semibold">{killsPerRound.toFixed(2)}</span>
-        </div>
-        <div className="flex flex-col">
-          <span className="text-muted-foreground text-xs uppercase tracking-wider">{`DD\u0394/R`}</span>
-          <span className={`text-lg font-semibold ${ddDeltaPerRound >= 0 ? 'text-emerald-600' : 'text-rose-500'}`}>
-            {ddDeltaPerRound >= 0 ? '+' : ''}{ddDeltaPerRound.toFixed(1)}
-          </span>
-        </div>
-      </div>
 
-      {/* K/D/A totals */}
-      <div className="flex items-center gap-4 sm:gap-6 pt-3 border-t border-border">
-        <div className="flex flex-col">
-          <span className="text-muted-foreground text-xs uppercase tracking-wider">Kills</span>
-          <span className="text-emerald-600 text-lg font-semibold">{stats.totalKills}</span>
-        </div>
-        <div className="flex flex-col">
-          <span className="text-muted-foreground text-xs uppercase tracking-wider">Deaths</span>
-          <span className="text-rose-500 text-lg font-semibold">{stats.totalDeaths}</span>
-        </div>
-        <div className="flex flex-col">
-          <span className="text-muted-foreground text-xs uppercase tracking-wider">Assists</span>
-          <span className="text-slate-600 text-lg font-semibold">{stats.totalAssists}</span>
-        </div>
-        <div className="flex flex-col ml-auto">
-          <span className="text-muted-foreground text-xs uppercase tracking-wider">試合数</span>
-          <span className="text-foreground text-lg font-semibold">{stats.totalMatches}</span>
+        {/* K/D/A totals */}
+        <div className="flex items-center gap-4 sm:gap-6 pt-3 border-t border-[#E2E8F0]">
+          <div className="flex flex-col">
+            <span className="text-[#64748B] text-xs font-medium uppercase tracking-wider">Kills</span>
+            <span className="text-[#10B981] text-lg font-mono font-semibold">{stats.totalKills}</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[#64748B] text-xs font-medium uppercase tracking-wider">Deaths</span>
+            <span className="text-[#E11D48] text-lg font-mono font-semibold">{stats.totalDeaths}</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[#64748B] text-xs font-medium uppercase tracking-wider">Assists</span>
+            <span className="text-[#64748B] text-lg font-mono font-semibold">{stats.totalAssists}</span>
+          </div>
+          <div className="flex flex-col ml-auto">
+            <span className="text-[#64748B] text-xs font-medium uppercase tracking-wider">試合数</span>
+            <span className="text-[#0F172A] text-lg font-mono font-semibold">{stats.totalMatches}</span>
+          </div>
         </div>
       </div>
     </div>

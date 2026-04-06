@@ -25,8 +25,8 @@ export default function PlaylistFilter({ current, onChange, loading }: PlaylistF
             disabled={loading}
             className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-150 border ${
               isActive
-                ? 'bg-indigo-600 border-indigo-600 text-white shadow-sm'
-                : 'bg-white border-border text-muted-foreground hover:border-indigo-300 hover:text-indigo-600'
+                ? 'bg-[#0D9488] border-[#0D9488] text-white shadow-sm'
+                : 'bg-white border-[#E2E8F0] text-[#64748B] hover:border-[#0D9488]/30 hover:text-[#0D9488]'
             } ${loading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
           >
             {playlist.label}

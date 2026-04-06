@@ -46,19 +46,19 @@ export default function SearchForm() {
               if (error) setError('');
             }}
             placeholder="名前#タグ（例: Player#JP1）"
-            className="w-full px-4 py-3 bg-white border border-border rounded-xl text-foreground placeholder-muted-foreground/60 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/20 transition-all text-base shadow-sm"
+            className="w-full px-4 py-3 bg-white border border-[#E2E8F0] rounded-xl text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:border-[#0D9488] focus:ring-2 focus:ring-[#0D9488]/20 transition-all text-base shadow-sm"
             autoComplete="off"
             spellCheck={false}
           />
           <button
             type="submit"
-            className="absolute right-1.5 top-1.5 bottom-1.5 px-5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-lg transition-colors text-sm shadow-sm"
+            className="absolute right-1.5 top-1.5 bottom-1.5 px-5 bg-[#0D9488] hover:bg-[#0F766E] text-white font-semibold rounded-lg transition-colors text-sm shadow-sm"
           >
             検索
           </button>
         </div>
         {error && (
-          <p className="text-destructive text-sm">{error}</p>
+          <p className="text-[#E11D48] text-sm">{error}</p>
         )}
       </div>
     </form>

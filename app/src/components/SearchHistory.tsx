@@ -26,12 +26,12 @@ export default function SearchHistory() {
   return (
     <div className="w-full max-w-lg">
       <div className="flex items-center justify-between mb-3">
-        <h2 className="text-foreground text-sm font-semibold uppercase tracking-wider">
+        <h2 className="text-[#0F172A] text-sm font-semibold uppercase tracking-wider">
           最近の検索
         </h2>
         <button
           onClick={handleClear}
-          className="text-muted-foreground hover:text-foreground text-xs transition-colors"
+          className="text-[#64748B] hover:text-[#0F172A] text-xs transition-colors"
         >
           履歴をクリア
         </button>
@@ -48,7 +48,7 @@ export default function SearchHistory() {
             <Link
               key={`${entry.name}#${entry.tag}`}
               href={`/player/${encodeURIComponent(entry.name)}/${encodeURIComponent(entry.tag)}`}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white border border-border hover:border-indigo-300 hover:shadow-sm transition-all group"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white border border-[#E2E8F0] hover:border-[#0D9488]/30 hover:shadow-sm transition-all group"
             >
               {/* Rank icon */}
               {iconUrl ? (
@@ -61,27 +61,27 @@ export default function SearchHistory() {
                   }}
                 />
               ) : (
-                <div className="w-7 h-7 rounded-full bg-muted flex items-center justify-center shrink-0">
-                  <span className="text-muted-foreground text-[8px]">N/A</span>
+                <div className="w-7 h-7 rounded-full bg-[#F8FAFC] flex items-center justify-center shrink-0">
+                  <span className="text-[#94A3B8] text-[8px]">N/A</span>
                 </div>
               )}
 
               {/* Player info */}
               <div className="flex-1 min-w-0">
-                <span className="text-foreground text-sm font-medium group-hover:text-indigo-600 transition-colors truncate block">
+                <span className="text-[#0F172A] text-sm font-medium group-hover:text-[#0D9488] transition-colors truncate block">
                   {entry.name}
-                  <span className="text-muted-foreground font-normal">#{entry.tag}</span>
+                  <span className="text-[#64748B] font-normal">#{entry.tag}</span>
                 </span>
               </div>
 
               {/* Rank */}
-              <span className="text-muted-foreground text-xs shrink-0">
+              <span className="text-[#64748B] text-xs shrink-0">
                 {translatedRank}
               </span>
 
               {/* Arrow */}
               <svg
-                className="w-4 h-4 text-muted-foreground/40 group-hover:text-indigo-400 transition-colors shrink-0"
+                className="w-4 h-4 text-[#94A3B8] group-hover:text-[#0D9488] transition-colors shrink-0"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
